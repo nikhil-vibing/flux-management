@@ -11,6 +11,8 @@ export const mockTickets: Ticket[] = [
     assignedTo: { name: "Marcus Chen", initials: "MC" },
     description:
       "Multiple employees in the sales department are reporting intermittent VPN disconnections when working remotely. The issue seems to occur every 15-20 minutes and requires a full reconnect. This is severely impacting productivity for remote workers.",
+    clientId: "CLT-001",
+    clientName: "Acme Corporation",
     activity: [
       {
         id: "a1-1",
@@ -55,6 +57,8 @@ export const mockTickets: Ticket[] = [
     assignedTo: { name: "Lisa Park", initials: "LP" },
     description:
       "Calendar events created on mobile devices are not syncing to the Outlook desktop client. The issue affects approximately 12 users in the marketing department. Restarting Outlook temporarily resolves the problem but it recurs within a few hours.",
+    clientId: "CLT-002",
+    clientName: "Meridian Healthcare",
     activity: [
       {
         id: "a2-1",
@@ -87,6 +91,8 @@ export const mockTickets: Ticket[] = [
     assignedTo: { name: "Tom Rivera", initials: "TR" },
     description:
       "New hire Jennifer Walsh starts on Feb 10. Need a fully configured laptop with standard software suite, VPN access, email account, and department-specific applications for the finance team.",
+    clientId: "CLT-003",
+    clientName: "Summit Financial Group",
     activity: [
       {
         id: "a3-1",
@@ -124,6 +130,8 @@ export const mockTickets: Ticket[] = [
     description:
       "The HP LaserJet Pro on the 3rd floor east wing is not accepting print jobs. Users are getting a 'printer offline' error. The printer display shows it is online and ready.",
     resolutionTime: "4h 30m",
+    clientId: "CLT-004",
+    clientName: "Apex Manufacturing",
     activity: [
       {
         id: "a4-1",
@@ -163,6 +171,8 @@ export const mockTickets: Ticket[] = [
     assignedTo: { name: "Marcus Chen", initials: "MC" },
     description:
       "Several executives are unable to complete MFA verification when logging into corporate applications. The Microsoft Authenticator app is not generating valid codes. This is blocking access to critical business systems.",
+    clientId: "CLT-001",
+    clientName: "Acme Corporation",
     activity: [
       {
         id: "a5-1",
@@ -197,6 +207,8 @@ export const mockTickets: Ticket[] = [
     description:
       "The marketing team lost access to their shared drive folder after last weekend's server maintenance. They are getting 'Access Denied' errors when trying to open files in the Q1 Campaign folder.",
     resolutionTime: "2h 15m",
+    clientId: "CLT-005",
+    clientName: "Coastal Retail Co",
     activity: [
       {
         id: "a6-1",
@@ -230,6 +242,8 @@ export const mockTickets: Ticket[] = [
     description:
       "The design team frequently needs to send large files (50-100MB) via email. Current limit is 25MB. Requesting an increase to 50MB or an alternative solution for large file sharing.",
     resolutionTime: "1d 4h",
+    clientId: "CLT-006",
+    clientName: "Sterling Legal Partners",
     activity: [
       {
         id: "a7-1",
@@ -272,6 +286,8 @@ export const mockTickets: Ticket[] = [
     assignedTo: { name: "Carlos Mendez", initials: "CM" },
     description:
       "The Zoom Room display in Conference Room B on the 2nd floor has been showing a black screen since Monday. The iPad controller is responsive but the main display will not turn on. Multiple departments use this room for client presentations.",
+    clientId: "CLT-007",
+    clientName: "Brightpath Education",
     activity: [
       {
         id: "a8-1",
@@ -305,6 +321,8 @@ export const mockTickets: Ticket[] = [
     assignedTo: { name: "Lisa Park", initials: "LP" },
     description:
       "Five new Adobe Creative Cloud licenses purchased for the design team are failing to activate. Users receive error code 213:19 when attempting to sign in. This is blocking the team from starting work on the Q1 rebrand project.",
+    clientId: "CLT-002",
+    clientName: "Meridian Healthcare",
     activity: [
       {
         id: "a9-1",
@@ -342,6 +360,8 @@ export const mockTickets: Ticket[] = [
     assignedTo: { name: "Marcus Chen", initials: "MC" },
     description:
       "Employees report extremely weak or no Wi-Fi signal in the east wing break room area. Signal strength drops from 4 bars to 0-1 bars when entering the space. This area was recently renovated with new walls that may be blocking the signal.",
+    clientId: "CLT-008",
+    clientName: "Prism Media Group",
     activity: [
       {
         id: "a10-1",
@@ -385,6 +405,8 @@ export const mockTickets: Ticket[] = [
     description:
       "VP of Operations account locked after multiple failed login attempts. The user suspects someone else may have been trying to access the account. Security review requested along with password reset.",
     resolutionTime: "45m",
+    clientId: "CLT-003",
+    clientName: "Summit Financial Group",
     activity: [
       {
         id: "a11-1",
@@ -425,6 +447,8 @@ export const mockTickets: Ticket[] = [
     assignedTo: { name: "Marcus Chen", initials: "MC" },
     description:
       "Monitoring system flagged sustained CPU usage above 95% on the primary SQL database server (DB-PROD-01). Application response times have increased significantly. Users are experiencing timeouts when accessing the CRM system.",
+    clientId: "CLT-001",
+    clientName: "Acme Corporation",
     activity: [
       {
         id: "a12-1",
@@ -463,6 +487,8 @@ export const mockTickets: Ticket[] = [
     description:
       "Three accountants in the finance department are requesting dual monitor setups to improve productivity during tax season. They currently have single 24-inch monitors.",
     resolutionTime: "3d",
+    clientId: "CLT-003",
+    clientName: "Summit Financial Group",
     activity: [
       {
         id: "a13-1",
@@ -496,6 +522,8 @@ export const mockTickets: Ticket[] = [
     assignedTo: { name: "Lisa Park", initials: "LP" },
     description:
       "The Salesforce-to-Outlook email integration is failing to log sent emails to contact records. The connector shows authenticated but sync operations return a 403 error. Sales team is manually logging communications which is inefficient.",
+    clientId: "CLT-005",
+    clientName: "Coastal Retail Co",
     activity: [
       {
         id: "a14-1",
@@ -536,6 +564,8 @@ export const mockTickets: Ticket[] = [
     description:
       "User reports multiple keys on their Dell Latitude laptop are sticking or not registering keypresses. The 'E', 'R', and spacebar are particularly affected. User suspects liquid damage from a coffee spill last week.",
     resolutionTime: "1d 2h",
+    clientId: "CLT-004",
+    clientName: "Apex Manufacturing",
     activity: [
       {
         id: "a15-1",
@@ -569,6 +599,8 @@ export const mockTickets: Ticket[] = [
     assignedTo: { name: "Marcus Chen", initials: "MC" },
     description:
       "Need to implement new conditional access policies in Azure AD to enforce MFA for all external access and block legacy authentication protocols. This is required for upcoming SOC 2 compliance audit.",
+    clientId: "CLT-001",
+    clientName: "Acme Corporation",
     activity: [
       {
         id: "a16-1",
@@ -606,6 +638,8 @@ export const mockTickets: Ticket[] = [
     assignedTo: { name: "Tom Rivera", initials: "TR" },
     description:
       "Primary file server (FS-PROD-01) is at 92% disk capacity. Current growth rate suggests the drive will be full within 2 weeks. Need to either expand storage or archive old files to cold storage.",
+    clientId: "CLT-009",
+    clientName: "Harborview Properties",
     activity: [
       {
         id: "a17-1",
@@ -642,6 +676,8 @@ export const mockTickets: Ticket[] = [
     assignedTo: { name: "Lisa Park", initials: "LP" },
     description:
       "Users on the 4th floor are experiencing choppy audio and dropped calls when using Microsoft Teams Phone. The issue seems to primarily affect external calls. Internal calls between Teams users work fine.",
+    clientId: "CLT-007",
+    clientName: "Brightpath Education",
     activity: [
       {
         id: "a18-1",
@@ -675,6 +711,8 @@ export const mockTickets: Ticket[] = [
     description:
       "The weekend full backup job for the production environment failed at 3:47 AM on Sunday. Veeam reported insufficient space on the backup repository. This leaves a gap in our backup chain that needs to be addressed immediately.",
     resolutionTime: "6h",
+    clientId: "CLT-010",
+    clientName: "Evergreen Energy",
     activity: [
       {
         id: "a19-1",
@@ -719,6 +757,8 @@ export const mockTickets: Ticket[] = [
     description:
       "An employee in accounts payable reported receiving a convincing phishing email disguised as an invoice from a known vendor. The email contained a malicious link. Employee did not click the link. Need to check if other employees received the same email.",
     resolutionTime: "3h 15m",
+    clientId: "CLT-001",
+    clientName: "Acme Corporation",
     activity: [
       {
         id: "a20-1",
@@ -763,6 +803,8 @@ export const mockTickets: Ticket[] = [
     description:
       "Widespread reports of slow internet speeds throughout the office. Speed tests showing 15 Mbps down when we should be getting 500 Mbps. Issue started this morning and is affecting all floors.",
     resolutionTime: "2h 45m",
+    clientId: "CLT-001",
+    clientName: "Acme Corporation",
     activity: [
       {
         id: "a21-1",
@@ -803,6 +845,8 @@ export const mockTickets: Ticket[] = [
     assignedTo: { name: "Carlos Mendez", initials: "CM" },
     description:
       "Facilities management has requested installation of 4 new IP security cameras in the newly expanded parking garage. Cameras need to integrate with the existing Milestone XProtect VMS system.",
+    clientId: "CLT-008",
+    clientName: "Prism Media Group",
     activity: [
       {
         id: "a22-1",
@@ -836,6 +880,8 @@ export const mockTickets: Ticket[] = [
     assignedTo: { name: "Tom Rivera", initials: "TR" },
     description:
       "After the latest Windows 11 cumulative update (KB5034765), the custom inventory management application crashes on startup. 15 warehouse employees are affected and cannot process shipments.",
+    clientId: "CLT-004",
+    clientName: "Apex Manufacturing",
     activity: [
       {
         id: "a23-1",
@@ -869,6 +915,8 @@ export const mockTickets: Ticket[] = [
     assignedTo: { name: "Lisa Park", initials: "LP" },
     description:
       "Eight users across different departments are reporting OneDrive sync conflicts and errors. Files show as 'sync pending' indefinitely. Some users have lost recent changes to shared documents.",
+    clientId: "CLT-002",
+    clientName: "Meridian Healthcare",
     activity: [
       {
         id: "a24-1",
@@ -909,6 +957,8 @@ export const mockTickets: Ticket[] = [
     description:
       "The Robin conference room booking system is displaying 'Service Unavailable' on all room tablets and the web portal. Employees cannot book or check room availability.",
     resolutionTime: "1h 30m",
+    clientId: "CLT-006",
+    clientName: "Sterling Legal Partners",
     activity: [
       {
         id: "a25-1",

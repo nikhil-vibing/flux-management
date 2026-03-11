@@ -1,0 +1,124 @@
+"use client";
+
+import {
+  UsersThreeIcon,
+  EnvelopeIcon,
+  PlusIcon,
+} from "@phosphor-icons/react";
+import { mockTeamMembers } from "@/data/mock-team";
+import type { TeamMember } from "@/data/types";
+
+const roleBadge: Record<TeamMember["role"], string> = {
+  "co-ceo": "bg-blue-10 text-blue",
+  director: "bg-success-tint text-success",
+  employee: "bg-ice-30 text-text-secondary",
+};
+
+const roleLabel: Record<TeamMember["role"], string> = {
+  "co-ceo": "Co-CEO",
+  director: "Director",
+  employee: "Employee",
+};
+
+export default function TeamPage() {
+  return (
+    <div className="space-y-6">
+      {/* ── Header ── */}
+      <div className="flex items-center justify-between">
+        <div className="flex items-center gap-3">
+          <div className="w-10 h-10 rounded-xl bg-blue-10 flex items-center justify-center text-blue">
+            <UsersThreeIcon size={22} weight="light" />
+          </div>
+          <div>
+            <h1 className="font-[family-name:var(--font-aptos)] text-xl font-semibold text-navy">
+              Team
+            </h1>
+            <p className="text-xs text-text-muted">Manage team members</p>
+          </div>
+        </div>
+        <button className="flex items-center gap-1.5 px-4 py-2 bg-blue text-white text-sm font-medium rounded-lg hover:bg-blue/90 transition-colors">
+          <PlusIcon size={16} weight="bold" />
+          Invite Member
+        </button>
+      </div>
+
+      {/* ── Team Grid ── */}
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+        {mockTeamMembers.map((member) => (
+          <div
+            key={member.id}
+            className="bg-white rounded-2xl shadow-level-1 border border-ice/40 p-5 hover:shadow-level-2 hover:-translate-y-0.5 transition-all duration-200"
+          >
+            {/* Top: Avatar + Info */}
+            <div className="flex items-start gap-3">
+              <div className="w-12 h-12 rounded-full bg-navy-80 flex items-center justify-center shrink-0">
+                <span className="text-sm text-white font-medium leading-none">
+                  {member.initials}
+                </span>
+              </div>
+              <div className="min-w-0 flex-1">
+                <div className="flex items-center gap-2">
+                  <h3 className="font-semibold text-sm text-navy truncate">
+                    {member.name}
+                  </h3>
+                  {member.status === "active" ? (
+                    <span className="w-2 h-2 rounded-full bg-success shrink-0" />
+                  ) : (
+                    <span className="flex items-center gap-1 shrink-0">
+                      <span className="w-2 h-2 rounded-full bg-warning" />
+                      <span className="text-[10px] text-warning font-medium">
+                        Invited
+                      </span>
+                    </span>
+                  )}
+                </div>
+                <div className="flex items-center gap-1 text-text-muted mt-0.5">
+                  <EnvelopeIcon size={12} weight="light" />
+                  <span className="text-xs truncate">{member.email}</span>
+                </div>
+                <span
+                  className={`inline-block mt-1.5 text-[10px] uppercase tracking-[0.08em] font-medium px-2 py-0.5 rounded-full ${roleBadge[member.role]}`}
+                >
+                  {roleLabel[member.role]}
+                </span>
+              </div>
+            </div>
+
+            {/* Utilization Bar */}
+            <div className="mt-4">
+              <div className="flex items-center justify-between mb-1">
+                <span className="text-[10px] text-text-muted uppercase tracking-[0.06em] font-medium">
+                  Utilization
+                </span>
+                <span className="text-xs text-text-secondary font-medium">
+                  {member.utilization}%
+                </span>
+              </div>
+              <div className="w-full bg-ice-50 rounded-full h-1.5">
+                <div
+                  className="bg-blue rounded-full h-1.5 transition-all duration-500"
+                  style={{ width: `${member.utilization}%` }}
+                />
+              </div>
+            </div>
+
+            {/* Stats Row */}
+            <div className="flex items-center gap-4 mt-3 text-xs text-text-secondary">
+              <span>
+                <strong className="text-navy">{member.activeTasks}</strong> active
+              </span>
+              <span>
+                <strong className="text-navy">{member.ticketsResolved}</strong> resolved
+              </span>
+            </div>
+
+            {/* Last Active */}
+            <p className="text-xs text-text-muted mt-3">
+              Last active: {member.lastActive}
+            </p>
+          </div>
+        ))}
+      </div>
+    </div>
+  );
+}

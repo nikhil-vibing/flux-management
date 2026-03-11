@@ -2,6 +2,58 @@ export type TicketStatus = "Open" | "Pending" | "Closed";
 export type TicketPriority = "Critical" | "High" | "Medium" | "Low";
 export type ProjectStatus = "On Track" | "At Risk" | "Delayed";
 export type TaskStatus = "To Do" | "In Progress" | "Review" | "Complete";
+export type UserRole = "co-ceo" | "director" | "employee";
+export type HealthScore = "healthy" | "at-risk" | "critical";
+export type ContractStatus = "active" | "expiring" | "expired";
+
+export interface ManagementUser {
+  id: string;
+  name: string;
+  email: string;
+  role: UserRole;
+  avatar?: string;
+  initials: string;
+}
+
+export interface Client {
+  id: string;
+  companyName: string;
+  primaryContact: { name: string; email: string; phone?: string };
+  industry: string;
+  contractStatus: ContractStatus;
+  contractStartDate: string;
+  healthScore: HealthScore;
+  monthlyRevenue: number;
+  lastActivity: string;
+  openTickets: number;
+  activeProjects: number;
+  slaCompliance: number;
+}
+
+export interface TeamMember {
+  id: string;
+  name: string;
+  email: string;
+  role: UserRole;
+  initials: string;
+  avatar?: string;
+  status: "active" | "invited";
+  utilization: number;
+  activeTasks: number;
+  ticketsResolved: number;
+  tasksCompleted: number;
+  avgResolutionTime: string;
+  lastActive: string;
+}
+
+export interface InternalNote {
+  id: string;
+  authorId: string;
+  authorName: string;
+  authorInitials: string;
+  content: string;
+  timestamp: string;
+}
 
 export interface Ticket {
   id: string;
@@ -15,13 +67,16 @@ export interface Ticket {
   resolutionTime?: string;
   activity: ActivityEvent[];
   attachments?: Attachment[];
+  clientId: string;
+  clientName: string;
+  internalNotes?: InternalNote[];
 }
 
 export interface ActivityEvent {
   id: string;
   title: string;
   timestamp: string;
-  type: "update" | "resolution" | "pending" | "system";
+  type: "update" | "resolution" | "pending" | "system" | "internal_note";
   note?: string;
 }
 
@@ -44,6 +99,9 @@ export interface Project {
   category: string;
   assignees: { name: string; initials: string; role: string }[];
   tasks: ProjectTask[];
+  clientId: string;
+  clientName: string;
+  techStack?: ProjectSubscription[];
 }
 
 export interface ProjectTask {
@@ -106,7 +164,7 @@ export interface Notification {
   title: string;
   description: string;
   timestamp: string;
-  type: "ticket" | "project" | "system";
+  type: "ticket" | "project" | "system" | "task_assignment" | "ticket_escalation" | "contact_form" | "health_alert" | "team_update";
   read: boolean;
   link?: string;
 }
@@ -122,10 +180,48 @@ export interface AIMessage {
   };
 }
 
-export interface ConnectorService {
+export type ConnectorStatus = "Connected" | "Disconnected";
+
+export interface Connector {
+  id: string;
   name: string;
-  icon: string;
-  status: "Connected" | "Disconnected";
+  description: string;
+  icon: "atera" | "planner" | "sharepoint" | "azure-ad" | "intune" | "teams";
+  status: ConnectorStatus;
   lastSynced: string;
-  summary: string;
+  stats: string;
+  reconnectMessage?: string;
+}
+
+export interface ProjectSubscription {
+  id: string;
+  name: string;
+  licenses: string;
+  costPerMonth: string;
+  renewalDate: string;
+  status: "Active" | "Expiring Soon" | "Expired";
+}
+
+export interface ActivityLogEntry {
+  id: string;
+  userId: string;
+  userName: string;
+  userInitials: string;
+  action: string;
+  description: string;
+  entityType: "ticket" | "project" | "document" | "client" | "note";
+  entityId: string;
+  clientId: string;
+  clientName: string;
+  timestamp: string;
+}
+
+export interface IntegrationConfig {
+  id: string;
+  service: "atera" | "microsoft365" | "sharepoint";
+  name: string;
+  description: string;
+  status: "connected" | "disconnected" | "error";
+  lastSynced?: string;
+  apiKey?: string;
 }

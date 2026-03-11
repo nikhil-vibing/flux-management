@@ -3,35 +3,32 @@
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import {
-  House,
-  Ticket,
-  Kanban,
-  Folder,
-  DotsThreeOutline,
+  SquaresFourIcon,
+  BuildingsIcon,
+  TicketIcon,
+  KanbanIcon,
+  DotsThreeOutlineIcon,
+  UsersThreeIcon,
+  ChartLineIcon,
+  PlugIcon,
+  RobotIcon,
+  GearSixIcon,
 } from "@phosphor-icons/react";
 import { useState } from "react";
-import {
-  Circuitry,
-  Robot,
-  Gear,
-  Question,
-  Plugs,
-  X,
-} from "@phosphor-icons/react";
 
 const tabs = [
-  { href: "/dashboard", icon: House, label: "Dashboard" },
-  { href: "/helpdesk", icon: Ticket, label: "Tickets" },
-  { href: "/projects", icon: Kanban, label: "Projects" },
-  { href: "/documents", icon: Folder, label: "Documents" },
+  { href: "/dashboard", icon: SquaresFourIcon, label: "Dashboard" },
+  { href: "/clients", icon: BuildingsIcon, label: "Clients" },
+  { href: "/tickets", icon: TicketIcon, label: "Tickets" },
+  { href: "/projects", icon: KanbanIcon, label: "Projects" },
 ];
 
 const moreItems = [
-  { href: "/tech-stack", icon: Circuitry, label: "Tech Stack" },
-  { href: "/connectors", icon: Plugs, label: "Connectors" },
-  { href: "/ai-assistant", icon: Robot, label: "AI Assistant" },
-  { href: "/settings", icon: Gear, label: "Settings" },
-  { href: "/help", icon: Question, label: "Help & Support" },
+  { href: "/team", icon: UsersThreeIcon, label: "Team" },
+  { href: "/reports", icon: ChartLineIcon, label: "Reports" },
+  { href: "/connectors", icon: PlugIcon, label: "Connectors" },
+  { href: "/ai-assistant", icon: RobotIcon, label: "AI Assistant" },
+  { href: "/settings", icon: GearSixIcon, label: "Settings" },
 ];
 
 export function MobileBottomBar() {
@@ -104,7 +101,7 @@ export function MobileBottomBar() {
               isMoreActive ? "text-blue" : "text-text-muted"
             }`}
           >
-            <DotsThreeOutline size={22} weight="light" />
+            <DotsThreeOutlineIcon size={22} weight="light" />
             <span className="text-[10px] font-medium">More</span>
           </button>
         </div>

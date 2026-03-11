@@ -1,6 +1,6 @@
 "use client";
 
-import { ArrowUp, ArrowDown, Equals } from "@phosphor-icons/react";
+import { ArrowUpIcon, ArrowDownIcon, EqualsIcon } from "@phosphor-icons/react";
 import { cn } from "@/lib/utils";
 import type { TicketPriority } from "@/data/types";
 
@@ -10,12 +10,12 @@ interface PriorityIndicatorProps {
 
 const priorityConfig: Record<
   TicketPriority,
-  { icon: typeof ArrowUp; colorClass: string; label: string }
+  { icon: typeof ArrowUpIcon; colorClass: string; label: string }
 > = {
-  Critical: { icon: ArrowUp, colorClass: "text-error", label: "Critical" },
-  High: { icon: ArrowUp, colorClass: "text-warning", label: "High" },
-  Medium: { icon: Equals, colorClass: "text-blue", label: "Medium" },
-  Low: { icon: ArrowDown, colorClass: "text-text-muted", label: "Low" },
+  Critical: { icon: ArrowUpIcon, colorClass: "text-error", label: "Critical" },
+  High: { icon: ArrowUpIcon, colorClass: "text-warning", label: "High" },
+  Medium: { icon: EqualsIcon, colorClass: "text-blue", label: "Medium" },
+  Low: { icon: ArrowDownIcon, colorClass: "text-text-muted", label: "Low" },
 };
 
 export function PriorityIndicator({ priority }: PriorityIndicatorProps) {

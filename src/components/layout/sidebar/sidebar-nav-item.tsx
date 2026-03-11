@@ -3,11 +3,11 @@
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { Tooltip, TooltipContent, TooltipTrigger } from "@/components/ui/tooltip";
-import type { Icon as PhosphorIcon } from "@phosphor-icons/react";
+import type { IconProps } from "@phosphor-icons/react";
 
 interface SidebarNavItemProps {
   href: string;
-  Icon: PhosphorIcon;
+  Icon: React.ComponentType<IconProps>;
   label: string;
   collapsed: boolean;
 }

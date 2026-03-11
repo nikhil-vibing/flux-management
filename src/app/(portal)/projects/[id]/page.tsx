@@ -4,12 +4,15 @@ import { useState, useMemo } from "react";
 import { useParams } from "next/navigation";
 import Link from "next/link";
 import {
-  CaretLeft,
-  CalendarBlank,
-  CheckCircle,
-  FolderOpen,
-  ClockCountdown,
-  ListChecks,
+  CaretLeftIcon,
+  CalendarBlankIcon,
+  CheckCircleIcon,
+  FolderOpenIcon,
+  ClockCountdownIcon,
+  ListChecksIcon,
+  DesktopIcon,
+  PlusIcon,
+  TrashIcon,
 } from "@phosphor-icons/react";
 import {
   PieChart,
@@ -19,10 +22,10 @@ import {
 } from "recharts";
 import { mockProjects } from "@/data/mock-projects";
 import { StatusBadge } from "@/components/shared/status-badge";
-import type { Project, ProjectTask, TaskStatus, TicketPriority } from "@/data/types";
+import type { Project, ProjectTask, ProjectSubscription, TaskStatus, TicketPriority } from "@/data/types";
 import { cn } from "@/lib/utils";
 
-type Tab = "tasks" | "timeline" | "files" | "overview";
+type Tab = "tasks" | "timeline" | "files" | "tech-stack" | "overview";
 
 const taskColumns: { status: TaskStatus; label: string; dotColor: string }[] = [
   { status: "To Do", label: "To Do", dotColor: "bg-text-muted" },
@@ -61,7 +64,7 @@ export default function ProjectDetailPage() {
     return (
       <div className="flex flex-col items-center justify-center py-24 text-center">
         <div className="w-16 h-16 rounded-full bg-ice-30 flex items-center justify-center mb-4">
-          <FolderOpen size={28} weight="light" className="text-text-muted" />
+          <FolderOpenIcon size={28} weight="light" className="text-text-muted" />
         </div>
         <h2 className="font-[family-name:var(--font-aptos)] font-bold text-xl text-text-primary mb-1">
           Project not found
@@ -73,7 +76,7 @@ export default function ProjectDetailPage() {
           href="/projects"
           className="flex items-center gap-1.5 text-sm font-medium text-blue hover:underline"
         >
-          <CaretLeft size={14} weight="light" />
+          <CaretLeftIcon size={14} weight="light" />
           Back to Projects
         </Link>
       </div>
@@ -84,6 +87,7 @@ export default function ProjectDetailPage() {
     { key: "tasks", label: "Tasks" },
     { key: "timeline", label: "Timeline" },
     { key: "files", label: "Files" },
+    { key: "tech-stack", label: "Tech Stack" },
     { key: "overview", label: "Overview" },
   ];
 
@@ -94,7 +98,7 @@ export default function ProjectDetailPage() {
         href="/projects"
         className="inline-flex items-center gap-1.5 text-sm font-medium text-blue hover:underline"
       >
-        <CaretLeft size={14} weight="light" />
+        <CaretLeftIcon size={14} weight="light" />
         Back to Projects
       </Link>
 
@@ -106,7 +110,7 @@ export default function ProjectDetailPage() {
         <div className="flex flex-wrap items-center gap-4 mt-3">
           <StatusBadge status={project.status} />
           <div className="flex items-center gap-1.5 text-text-secondary">
-            <CalendarBlank size={14} weight="light" />
+            <CalendarBlankIcon size={14} weight="light" />
             <span className="text-xs">Due {project.dueDate}</span>
           </div>
           <div className="flex items-center -space-x-2">
@@ -152,6 +156,7 @@ export default function ProjectDetailPage() {
       {activeTab === "tasks" && <TasksTab project={project} />}
       {activeTab === "timeline" && <TimelineTab project={project} />}
       {activeTab === "files" && <FilesTab />}
+      {activeTab === "tech-stack" && <TechStackTab techStack={project.techStack ?? []} />}
       {activeTab === "overview" && <OverviewTab project={project} />}
     </div>
   );
@@ -222,7 +227,7 @@ function TasksTab({ project }: { project: Project }) {
                     </span>
                   </div>
                   <div className="flex items-center gap-1 text-text-muted">
-                    <CalendarBlank size={11} weight="light" />
+                    <CalendarBlankIcon size={11} weight="light" />
                     <span className="text-[11px]">{task.dueDate}</span>
                   </div>
                 </div>
@@ -383,7 +388,7 @@ function FilesTab() {
   return (
     <div className="bg-white rounded-2xl shadow-level-1 border border-ice/40 p-10 flex flex-col items-center justify-center text-center">
       <div className="w-14 h-14 rounded-full bg-ice-30 flex items-center justify-center mb-4">
-        <FolderOpen size={24} weight="light" className="text-text-muted" />
+        <FolderOpenIcon size={24} weight="light" className="text-text-muted" />
       </div>
       <h3 className="font-[family-name:var(--font-aptos)] font-semibold text-base text-text-primary mb-1">
         No project files uploaded yet
@@ -392,6 +397,170 @@ function FilesTab() {
         Files related to this project will appear here once they are uploaded by
         the team.
       </p>
+    </div>
+  );
+}
+
+/* ================================================================== */
+/*  Tech Stack Tab                                                     */
+/* ================================================================== */
+function TechStackTab({ techStack }: { techStack: ProjectSubscription[] }) {
+  const [items, setItems] = useState(techStack);
+
+  const handleRemove = (id: string) => {
+    setItems((prev) => prev.filter((s) => s.id !== id));
+  };
+
+  const totalCost = items.reduce((sum, s) => {
+    const num = parseFloat(s.costPerMonth.replace(/[$,]/g, ""));
+    return sum + (isNaN(num) ? 0 : num);
+  }, 0);
+
+  const expiringSoon = items.filter((s) => s.status === "Expiring Soon").length;
+
+  const statusColor: Record<string, string> = {
+    Active: "text-success bg-success-tint",
+    "Expiring Soon": "text-warning bg-warning-tint",
+    Expired: "text-error bg-error-tint",
+  };
+
+  return (
+    <div className="space-y-6">
+      {/* KPI row */}
+      <div className="grid grid-cols-2 lg:grid-cols-4 gap-4">
+        <div className="bg-white rounded-2xl border border-ice/40 shadow-level-1 p-5">
+          <div className="flex items-center gap-3">
+            <div className="w-9 h-9 rounded-full bg-ice-30 flex items-center justify-center">
+              <DesktopIcon size={16} weight="light" className="text-navy" />
+            </div>
+            <div>
+              <p className="font-[family-name:var(--font-aptos)] font-bold text-xl text-text-primary">{items.length}</p>
+              <p className="text-[11px] uppercase tracking-[0.08em] font-medium text-text-muted">Total Software</p>
+            </div>
+          </div>
+        </div>
+        <div className="bg-white rounded-2xl border border-ice/40 shadow-level-1 p-5">
+          <div className="flex items-center gap-3">
+            <div className="w-9 h-9 rounded-full bg-success-tint flex items-center justify-center">
+              <CheckCircleIcon size={16} weight="light" className="text-success" />
+            </div>
+            <div>
+              <p className="font-[family-name:var(--font-aptos)] font-bold text-xl text-text-primary">
+                {items.filter((s) => s.status === "Active").length}
+              </p>
+              <p className="text-[11px] uppercase tracking-[0.08em] font-medium text-text-muted">Active</p>
+              {expiringSoon > 0 && (
+                <p className="text-[10px] text-warning font-medium">{expiringSoon} expiring soon</p>
+              )}
+            </div>
+          </div>
+        </div>
+        <div className="bg-white rounded-2xl border border-ice/40 shadow-level-1 p-5 col-span-2 lg:col-span-2">
+          <div className="flex items-center gap-3">
+            <div className="w-9 h-9 rounded-full bg-blue-10 flex items-center justify-center">
+              <span className="text-xs font-bold text-blue">$</span>
+            </div>
+            <div>
+              <p className="font-[family-name:var(--font-aptos)] font-bold text-xl text-text-primary">
+                ${totalCost.toLocaleString()}
+              </p>
+              <p className="text-[11px] uppercase tracking-[0.08em] font-medium text-text-muted">Monthly Cost</p>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      {/* Subscriptions table */}
+      <div className="bg-white rounded-2xl shadow-level-1 border border-ice/40 overflow-hidden">
+        <div className="flex items-center justify-between p-6 pb-4">
+          <div className="flex items-center gap-3">
+            <div className="w-1 h-5 bg-navy rounded-full" />
+            <div className="flex items-center gap-2">
+              <DesktopIcon size={16} weight="light" className="text-text-secondary" />
+              <h3 className="font-[family-name:var(--font-aptos)] font-semibold text-base text-text-primary">
+                Software & Subscriptions
+              </h3>
+              <span className="text-[11px] font-medium text-text-muted bg-ice-30 px-2 py-0.5 rounded-full">
+                {items.length}
+              </span>
+            </div>
+          </div>
+          <button className="flex items-center gap-1.5 px-3 py-1.5 text-xs font-medium text-blue hover:bg-blue-10 rounded-lg transition-colors">
+            <PlusIcon size={14} weight="light" />
+            Add Subscription
+          </button>
+        </div>
+
+        {items.length === 0 ? (
+          <div className="px-6 pb-8 pt-4 text-center">
+            <p className="text-sm text-text-muted">No subscriptions added yet.</p>
+          </div>
+        ) : (
+          <div className="overflow-x-auto">
+            <table className="w-full">
+              <thead>
+                <tr className="border-t border-ice">
+                  <th className="text-left text-[11px] uppercase tracking-[0.08em] font-medium text-text-muted px-6 py-3">
+                    Software
+                  </th>
+                  <th className="text-left text-[11px] uppercase tracking-[0.08em] font-medium text-text-muted px-4 py-3">
+                    Licenses
+                  </th>
+                  <th className="text-left text-[11px] uppercase tracking-[0.08em] font-medium text-text-muted px-4 py-3">
+                    Cost/Month
+                  </th>
+                  <th className="text-left text-[11px] uppercase tracking-[0.08em] font-medium text-text-muted px-4 py-3">
+                    Renewal
+                  </th>
+                  <th className="text-left text-[11px] uppercase tracking-[0.08em] font-medium text-text-muted px-4 py-3">
+                    Status
+                  </th>
+                  <th className="px-4 py-3" />
+                </tr>
+              </thead>
+              <tbody>
+                {items.map((sub) => (
+                  <tr
+                    key={sub.id}
+                    className="border-t border-ice hover:bg-ice-30/50 transition-colors group"
+                  >
+                    <td className="px-6 py-3.5">
+                      <div className="flex items-center gap-3">
+                        <div className="w-8 h-8 rounded-lg bg-ice-30 flex items-center justify-center shrink-0">
+                          <DesktopIcon size={14} weight="light" className="text-text-secondary" />
+                        </div>
+                        <span className="text-[13px] font-medium text-text-primary">{sub.name}</span>
+                      </div>
+                    </td>
+                    <td className="px-4 py-3.5 text-[13px] text-text-secondary">{sub.licenses}</td>
+                    <td className="px-4 py-3.5 text-[13px] font-medium text-text-primary">{sub.costPerMonth}</td>
+                    <td className="px-4 py-3.5 text-[13px] text-text-secondary">{sub.renewalDate}</td>
+                    <td className="px-4 py-3.5">
+                      <span
+                        className={cn(
+                          "inline-flex px-2.5 py-0.5 rounded-full text-[11px] font-medium",
+                          statusColor[sub.status]
+                        )}
+                      >
+                        {sub.status}
+                      </span>
+                    </td>
+                    <td className="px-4 py-3.5">
+                      <button
+                        onClick={() => handleRemove(sub.id)}
+                        className="opacity-0 group-hover:opacity-100 p-1.5 text-text-muted hover:text-error hover:bg-error-tint rounded-md transition-all"
+                        title="Remove subscription"
+                      >
+                        <TrashIcon size={14} weight="light" />
+                      </button>
+                    </td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
+        )}
+      </div>
     </div>
   );
 }
@@ -427,7 +596,7 @@ function OverviewTab({ project }: { project: Project }) {
           <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
             <div className="flex items-center gap-3">
               <div className="w-9 h-9 rounded-full bg-blue-10 flex items-center justify-center shrink-0">
-                <CalendarBlank size={16} weight="light" className="text-blue" />
+                <CalendarBlankIcon size={16} weight="light" className="text-blue" />
               </div>
               <div>
                 <p className="text-[11px] uppercase tracking-[0.08em] font-medium text-text-muted">
@@ -440,7 +609,7 @@ function OverviewTab({ project }: { project: Project }) {
             </div>
             <div className="flex items-center gap-3">
               <div className="w-9 h-9 rounded-full bg-error-tint flex items-center justify-center shrink-0">
-                <ClockCountdown size={16} weight="light" className="text-error" />
+                <ClockCountdownIcon size={16} weight="light" className="text-error" />
               </div>
               <div>
                 <p className="text-[11px] uppercase tracking-[0.08em] font-medium text-text-muted">
@@ -453,7 +622,7 @@ function OverviewTab({ project }: { project: Project }) {
             </div>
             <div className="flex items-center gap-3">
               <div className="w-9 h-9 rounded-full bg-success-tint flex items-center justify-center shrink-0">
-                <ListChecks size={16} weight="light" className="text-success" />
+                <ListChecksIcon size={16} weight="light" className="text-success" />
               </div>
               <div>
                 <p className="text-[11px] uppercase tracking-[0.08em] font-medium text-text-muted">

@@ -1,11 +1,10 @@
 "use client";
 
 import { useEffect, useState, useCallback } from "react";
-import { MagnifyingGlass, X, Clock, Ticket, Kanban, FolderOpen, SquaresFour } from "@phosphor-icons/react";
+import { MagnifyingGlassIcon, TicketIcon, KanbanIcon, SquaresFourIcon, BuildingsIcon, UsersThreeIcon, ChartLineIcon, PlugIcon } from "@phosphor-icons/react";
 import { useRouter } from "next/navigation";
 import { mockTickets } from "@/data/mock-tickets";
 import { mockProjects } from "@/data/mock-projects";
-import { mockDocuments } from "@/data/mock-documents";
 import { AnimatePresence, motion } from "framer-motion";
 
 interface CommandPaletteProps {
@@ -17,16 +16,19 @@ interface SearchResult {
   id: string;
   title: string;
   subtitle: string;
-  type: "ticket" | "project" | "document" | "page";
+  type: "ticket" | "project" | "client" | "page";
   href: string;
   icon: React.ReactNode;
 }
 
 const pages: SearchResult[] = [
-  { id: "p1", title: "Dashboard", subtitle: "Home", type: "page", href: "/dashboard", icon: <SquaresFour size={18} weight="light" /> },
-  { id: "p2", title: "Helpdesk", subtitle: "Support tickets", type: "page", href: "/helpdesk", icon: <Ticket size={18} weight="light" /> },
-  { id: "p3", title: "Projects", subtitle: "Active projects", type: "page", href: "/projects", icon: <Kanban size={18} weight="light" /> },
-  { id: "p4", title: "Documents", subtitle: "Shared files", type: "page", href: "/documents", icon: <FolderOpen size={18} weight="light" /> },
+  { id: "p1", title: "Dashboard", subtitle: "Overview", type: "page", href: "/dashboard", icon: <SquaresFourIcon size={18} weight="light" /> },
+  { id: "p2", title: "Clients", subtitle: "Client management", type: "page", href: "/clients", icon: <BuildingsIcon size={18} weight="light" /> },
+  { id: "p3", title: "Tickets", subtitle: "All tickets", type: "page", href: "/tickets", icon: <TicketIcon size={18} weight="light" /> },
+  { id: "p4", title: "Projects", subtitle: "All projects", type: "page", href: "/projects", icon: <KanbanIcon size={18} weight="light" /> },
+  { id: "p5", title: "Team", subtitle: "Team members", type: "page", href: "/team", icon: <UsersThreeIcon size={18} weight="light" /> },
+  { id: "p6", title: "Reports", subtitle: "Analytics & reports", type: "page", href: "/reports", icon: <ChartLineIcon size={18} weight="light" /> },
+  { id: "p7", title: "Connectors", subtitle: "External integrations", type: "page", href: "/connectors", icon: <PlugIcon size={18} weight="light" /> },
 ];
 
 export function CommandPalette({ open, onClose }: CommandPaletteProps) {
@@ -50,8 +52,8 @@ export function CommandPalette({ open, onClose }: CommandPaletteProps) {
           title: `#${t.id}`,
           subtitle: t.subject,
           type: "ticket",
-          href: `/helpdesk?ticket=${t.id}`,
-          icon: <Ticket size={18} weight="light" />,
+          href: `/tickets?ticket=${t.id}`,
+          icon: <TicketIcon size={18} weight="light" />,
         })
       );
 
@@ -65,21 +67,7 @@ export function CommandPalette({ open, onClose }: CommandPaletteProps) {
           subtitle: `${p.progress}% complete`,
           type: "project",
           href: `/projects/${p.id}`,
-          icon: <Kanban size={18} weight="light" />,
-        })
-      );
-
-    mockDocuments
-      .filter((d) => d.name.toLowerCase().includes(q))
-      .slice(0, 3)
-      .forEach((d) =>
-        results.push({
-          id: d.id,
-          title: d.name,
-          subtitle: d.folder,
-          type: "document",
-          href: "/documents",
-          icon: <FolderOpen size={18} weight="light" />,
+          icon: <KanbanIcon size={18} weight="light" />,
         })
       );
 
@@ -106,7 +94,7 @@ export function CommandPalette({ open, onClose }: CommandPaletteProps) {
       if ((e.metaKey || e.ctrlKey) && e.key === "k") {
         e.preventDefault();
         if (open) onClose();
-        else onClose(); // parent manages toggle
+        else onClose();
       }
     };
     window.addEventListener("keydown", handleKeyDown);
@@ -144,7 +132,7 @@ export function CommandPalette({ open, onClose }: CommandPaletteProps) {
   const typeLabels: Record<string, string> = {
     ticket: "Tickets",
     project: "Projects",
-    document: "Documents",
+    client: "Clients",
     page: "Pages",
   };
 
@@ -171,13 +159,13 @@ export function CommandPalette({ open, onClose }: CommandPaletteProps) {
           >
             {/* Search Input */}
             <div className="flex items-center gap-3 px-5 h-14 border-b border-ice">
-              <MagnifyingGlass size={20} weight="light" className="text-blue flex-shrink-0" />
+              <MagnifyingGlassIcon size={20} weight="light" className="text-blue flex-shrink-0" />
               <input
                 autoFocus
                 value={query}
                 onChange={(e) => setQuery(e.target.value)}
                 onKeyDown={handleKeyDown}
-                placeholder="Search tickets, projects, documents..."
+                placeholder="Search tickets, projects, clients..."
                 className="flex-1 text-base bg-transparent outline-none placeholder:text-silver-dark text-text-primary"
               />
               <kbd className="text-[11px] text-text-muted bg-ice-30 px-1.5 py-0.5 rounded">
@@ -193,7 +181,7 @@ export function CommandPalette({ open, onClose }: CommandPaletteProps) {
                     No results for &ldquo;{query}&rdquo;
                   </p>
                   <p className="text-xs text-text-muted mt-1">
-                    Try searching for ticket numbers, project names, or file names
+                    Try searching for ticket numbers, project names, or client names
                   </p>
                 </div>
               ) : (

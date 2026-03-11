@@ -33,6 +33,7 @@ CLAUDE.md
 *.pdf
 UNIVERSAL_VIBE_CODING_AGENT.md
 style-flux.md
+style-flux*.md
 
 # Misc
 *.tsbuildinfo

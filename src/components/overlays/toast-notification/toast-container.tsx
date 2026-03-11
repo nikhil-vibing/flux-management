@@ -3,30 +3,30 @@
 import { useToastStore } from "@/stores/toast-store";
 import type { Toast, ToastType } from "@/stores/toast-store";
 import { AnimatePresence, motion } from "framer-motion";
-import { X, CheckCircle, Warning, Info, XCircle } from "@phosphor-icons/react";
+import { XIcon, CheckCircleIcon, WarningIcon, InfoIcon, XCircleIcon } from "@phosphor-icons/react";
 import { useEffect, useState } from "react";
 
 const config: Record<ToastType, { icon: React.ReactNode; border: string; bg: string; color: string }> = {
   success: {
-    icon: <CheckCircle size={20} weight="light" />,
+    icon: <CheckCircleIcon size={20} weight="light" />,
     border: "border-l-success",
     bg: "bg-success-tint",
     color: "text-success",
   },
   warning: {
-    icon: <Warning size={20} weight="light" />,
+    icon: <WarningIcon size={20} weight="light" />,
     border: "border-l-warning",
     bg: "bg-warning-tint",
     color: "text-warning",
   },
   danger: {
-    icon: <XCircle size={20} weight="light" />,
+    icon: <XCircleIcon size={20} weight="light" />,
     border: "border-l-error",
     bg: "bg-error-tint",
     color: "text-error",
   },
   info: {
-    icon: <Info size={20} weight="light" />,
+    icon: <InfoIcon size={20} weight="light" />,
     border: "border-l-blue",
     bg: "bg-blue-10",
     color: "text-blue",
@@ -70,7 +70,7 @@ function ToastItem({ toast }: { toast: Toast }) {
           onClick={() => removeToast(toast.id)}
           className="text-text-muted hover:text-text-secondary flex-shrink-0"
         >
-          <X size={16} weight="light" />
+          <XIcon size={16} weight="light" />
         </button>
       </div>
       {/* Progress bar */}

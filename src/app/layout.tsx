@@ -3,8 +3,8 @@ import { roboto } from "@/lib/fonts";
 import "./globals.css";
 
 export const metadata: Metadata = {
-  title: "Flux Technologies — Client Portal",
-  description: "Your IT environment command center",
+  title: "Flux Technologies — Management Portal",
+  description: "Internal management command center",
   icons: {
     icon: [
       {

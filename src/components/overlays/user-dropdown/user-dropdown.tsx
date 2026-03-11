@@ -1,6 +1,6 @@
 "use client";
 
-import { GearSix, Question, SignOut } from "@phosphor-icons/react";
+import { GearSixIcon, SignOutIcon } from "@phosphor-icons/react";
 import { AnimatePresence, motion } from "framer-motion";
 import { useRef, useEffect } from "react";
 
@@ -36,12 +36,12 @@ export function UserDropdown({ open, onClose }: UserDropdownProps) {
             <div className="flex items-center gap-3">
               <div className="w-10 h-10 rounded-full bg-navy-80 flex items-center justify-center flex-shrink-0">
                 <span className="font-[family-name:var(--font-aptos)] font-semibold text-sm text-white">
-                  SM
+                  AR
                 </span>
               </div>
               <div className="min-w-0">
-                <p className="text-sm font-semibold text-text-primary truncate">Sarah Mitchell</p>
-                <p className="text-xs text-text-muted truncate">sarah@acmecorp.com</p>
+                <p className="text-sm font-semibold text-text-primary truncate">Alex Rivera</p>
+                <p className="text-xs text-text-muted truncate">alex@fluxtechnologies.com</p>
               </div>
             </div>
           </div>
@@ -49,9 +49,8 @@ export function UserDropdown({ open, onClose }: UserDropdownProps) {
           {/* Menu Items */}
           <div className="py-1">
             {[
-              { icon: <GearSix size={18} weight="light" />, label: "Account Settings", danger: false },
-              { icon: <Question size={18} weight="light" />, label: "Help & Support", danger: false },
-              { icon: <SignOut size={18} weight="light" />, label: "Sign Out", danger: true },
+              { icon: <GearSixIcon size={18} weight="light" />, label: "Account Settings", danger: false },
+              { icon: <SignOutIcon size={18} weight="light" />, label: "Sign Out", danger: true },
             ].map((item) => (
               <button
                 key={item.label}

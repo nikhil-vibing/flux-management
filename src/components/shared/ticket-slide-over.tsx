@@ -1,7 +1,7 @@
 "use client";
 
 import type { Ticket } from "@/data/types";
-import { X, CircleDashed, Clock, CheckCircle, Paperclip, DownloadSimple } from "@phosphor-icons/react";
+import { XIcon, CircleDashedIcon, ClockIcon, CheckCircleIcon, PaperclipIcon, DownloadSimpleIcon } from "@phosphor-icons/react";
 import { StatusBadge } from "./status-badge";
 import { PriorityIndicator } from "./priority-indicator";
 import { AnimatePresence, motion } from "framer-motion";
@@ -37,7 +37,7 @@ export function TicketSlideOver({ ticket, onClose }: TicketSlideOverProps) {
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
             transition={{ duration: 0.2 }}
-            className="fixed inset-0 bg-navy/25 backdrop-blur-sm z-[60]"
+            className="fixed inset-0 bg-navy/50 z-[60]"
             onClick={onClose}
           />
 
@@ -55,7 +55,7 @@ export function TicketSlideOver({ ticket, onClose }: TicketSlideOverProps) {
                 onClick={onClose}
                 className="flex items-center justify-center w-9 h-9 rounded-lg hover:bg-ice-30 transition-colors"
               >
-                <X size={20} weight="light" className="text-text-secondary" />
+                <XIcon size={20} weight="light" className="text-text-secondary" />
               </button>
               <span className="font-mono text-sm font-normal text-navy">
                 #{ticket.id}
@@ -148,11 +148,11 @@ export function TicketSlideOver({ ticket, onClose }: TicketSlideOverProps) {
                         key={i}
                         className="flex items-center gap-3 border border-ice rounded-md px-3.5 py-2.5 hover:bg-ice-30 transition-colors"
                       >
-                        <Paperclip size={16} weight="light" className={fileTypeColors[file.type]} />
+                        <PaperclipIcon size={16} weight="light" className={fileTypeColors[file.type]} />
                         <span className="text-[13px] text-text-primary flex-1 truncate">{file.name}</span>
                         <span className="text-[11px] text-text-muted">{file.size}</span>
                         <button className="w-7 h-7 flex items-center justify-center rounded-lg hover:bg-ice transition-colors">
-                          <DownloadSimple size={16} weight="light" className="text-text-secondary" />
+                          <DownloadSimpleIcon size={16} weight="light" className="text-text-secondary" />
                         </button>
                       </div>
                     ))}

@@ -1,4 +1,4 @@
-import type { Project } from "./types";
+import type { Project, ProjectSubscription } from "./types";
 
 export const mockProjects: Project[] = [
   {
@@ -13,11 +13,18 @@ export const mockProjects: Project[] = [
     description:
       "Migrate all on-premises workloads to Azure cloud infrastructure, including virtual machines, databases, and file storage. This project encompasses the full lift-and-shift plus optimization of existing systems to cloud-native services.",
     category: "Infrastructure",
+    clientId: "CLT-001",
+    clientName: "Acme Corporation",
     assignees: [
       { name: "Marcus Chen", initials: "MC", role: "Project Lead" },
       { name: "Tom Rivera", initials: "TR", role: "Cloud Architect" },
       { name: "Priya Sharma", initials: "PS", role: "DevOps Engineer" },
       { name: "Jake Morrison", initials: "JM", role: "Systems Engineer" },
+    ],
+    techStack: [
+      { id: "TS-001", name: "Microsoft Azure", licenses: "Enterprise", costPerMonth: "$4,200", renewalDate: "Oct 1, 2026", status: "Active" },
+      { id: "TS-002", name: "Terraform Cloud", licenses: "10 / 10", costPerMonth: "$700", renewalDate: "Aug 15, 2026", status: "Active" },
+      { id: "TS-003", name: "Datadog Monitoring", licenses: "5 / 5", costPerMonth: "$450", renewalDate: "Mar 20, 2026", status: "Expiring Soon" },
     ],
     tasks: [
       {
@@ -194,10 +201,17 @@ export const mockProjects: Project[] = [
     description:
       "Comprehensive security audit to achieve SOC 2 Type II compliance. Includes policy review, control testing, vulnerability assessments, and documentation of all security processes. External auditor engagement scheduled for late February.",
     category: "Security & Compliance",
+    clientId: "CLT-003",
+    clientName: "Summit Financial Group",
     assignees: [
       { name: "Marcus Chen", initials: "MC", role: "Security Lead" },
       { name: "Lisa Park", initials: "LP", role: "Compliance Analyst" },
       { name: "Rebecca Foster", initials: "RF", role: "Security Engineer" },
+    ],
+    techStack: [
+      { id: "TS-004", name: "CrowdStrike Falcon", licenses: "260 / 275", costPerMonth: "$3,850", renewalDate: "Dec 1, 2026", status: "Active" },
+      { id: "TS-005", name: "Qualys VMDR", licenses: "1 / 1", costPerMonth: "$1,200", renewalDate: "Jun 15, 2026", status: "Active" },
+      { id: "TS-006", name: "Splunk Enterprise", licenses: "5 GB/day", costPerMonth: "$2,100", renewalDate: "Apr 1, 2026", status: "Active" },
     ],
     tasks: [
       {
@@ -374,10 +388,16 @@ export const mockProjects: Project[] = [
     description:
       "Phase 2 of the network infrastructure upgrade covering floors 3-5. Includes replacement of all edge switches with Cisco Catalyst 9300 series, new fiber backbone, and implementation of network segmentation with VLANs for improved security.",
     category: "Infrastructure",
+    clientId: "CLT-004",
+    clientName: "Apex Manufacturing",
     assignees: [
       { name: "Marcus Chen", initials: "MC", role: "Network Architect" },
       { name: "Carlos Mendez", initials: "CM", role: "Network Technician" },
       { name: "Jake Morrison", initials: "JM", role: "Cable Technician" },
+    ],
+    techStack: [
+      { id: "TS-007", name: "Cisco DNA Center", licenses: "1 / 1", costPerMonth: "$800", renewalDate: "Sep 1, 2026", status: "Active" },
+      { id: "TS-008", name: "SolarWinds NPM", licenses: "1 / 1", costPerMonth: "$350", renewalDate: "Feb 28, 2026", status: "Expiring Soon" },
     ],
     tasks: [
       {
@@ -554,11 +574,19 @@ export const mockProjects: Project[] = [
     description:
       "Complete redesign of the internal employee portal using modern web technologies. The new portal will feature a responsive design, self-service IT capabilities, knowledge base, and integration with HR and IT ticketing systems.",
     category: "Software Development",
+    clientId: "CLT-002",
+    clientName: "Meridian Healthcare",
     assignees: [
       { name: "Lisa Park", initials: "LP", role: "Project Manager" },
       { name: "Daniel Kim", initials: "DK", role: "Frontend Developer" },
       { name: "Sophie Laurent", initials: "SL", role: "UX Designer" },
       { name: "Priya Sharma", initials: "PS", role: "Backend Developer" },
+    ],
+    techStack: [
+      { id: "TS-009", name: "Jira Software Cloud", licenses: "40 / 50", costPerMonth: "$350", renewalDate: "Jun 15, 2026", status: "Active" },
+      { id: "TS-010", name: "Figma Enterprise", licenses: "8 / 10", costPerMonth: "$600", renewalDate: "Jul 1, 2026", status: "Active" },
+      { id: "TS-011", name: "GitHub Enterprise", licenses: "15 / 20", costPerMonth: "$420", renewalDate: "May 1, 2026", status: "Active" },
+      { id: "TS-012", name: "Vercel Pro", licenses: "3 / 5", costPerMonth: "$150", renewalDate: "Mar 10, 2026", status: "Expiring Soon" },
     ],
     tasks: [
       {
@@ -735,10 +763,16 @@ export const mockProjects: Project[] = [
     description:
       "Develop and test a comprehensive disaster recovery plan covering all critical business systems. Includes defining RTOs and RPOs, establishing failover procedures, and conducting tabletop exercises and live DR tests.",
     category: "Security & Compliance",
+    clientId: "CLT-005",
+    clientName: "Coastal Retail Co",
     assignees: [
       { name: "Tom Rivera", initials: "TR", role: "DR Lead" },
       { name: "Marcus Chen", initials: "MC", role: "Infrastructure Advisor" },
       { name: "Lisa Park", initials: "LP", role: "Documentation Lead" },
+    ],
+    techStack: [
+      { id: "TS-013", name: "Veeam Backup", licenses: "1 / 1", costPerMonth: "$900", renewalDate: "Nov 1, 2026", status: "Active" },
+      { id: "TS-014", name: "Azure Site Recovery", licenses: "Enterprise", costPerMonth: "$1,500", renewalDate: "Oct 1, 2026", status: "Active" },
     ],
     tasks: [
       {
@@ -915,11 +949,18 @@ export const mockProjects: Project[] = [
     description:
       "Migrate from on-premises Exchange and SharePoint to Microsoft 365 cloud services. Includes email migration, SharePoint Online setup, Teams deployment, and OneDrive rollout for all 250 employees.",
     category: "Cloud Services",
+    clientId: "CLT-007",
+    clientName: "Brightpath Education",
     assignees: [
       { name: "Lisa Park", initials: "LP", role: "Migration Lead" },
       { name: "Tom Rivera", initials: "TR", role: "Exchange Specialist" },
       { name: "Carlos Mendez", initials: "CM", role: "Desktop Support" },
       { name: "Priya Sharma", initials: "PS", role: "SharePoint Specialist" },
+    ],
+    techStack: [
+      { id: "TS-015", name: "Microsoft 365 Business Premium", licenses: "250 / 250", costPerMonth: "$5,500", renewalDate: "Oct 1, 2026", status: "Active" },
+      { id: "TS-016", name: "BitTitan MigrationWiz", licenses: "250 / 250", costPerMonth: "$0", renewalDate: "N/A", status: "Active" },
+      { id: "TS-017", name: "ShareGate Desktop", licenses: "2 / 2", costPerMonth: "$200", renewalDate: "Apr 15, 2026", status: "Active" },
     ],
     tasks: [
       {

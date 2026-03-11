@@ -3,38 +3,35 @@
 import { useSidebarStore } from "@/stores/sidebar-store";
 import { SidebarNavItem } from "./sidebar-nav-item";
 import {
-  House,
-  Ticket,
-  Kanban,
-  Folder,
-  Circuitry,
-  Robot,
-  Gear,
-  Question,
-  X,
-  CaretLeft,
-  Plugs,
-  SignOut,
+  SquaresFourIcon,
+  BuildingsIcon,
+  TicketIcon,
+  KanbanIcon,
+  UsersThreeIcon,
+  ChartLineIcon,
+  PlugIcon,
+  RobotIcon,
+  GearSixIcon,
+  XIcon,
+  CaretLeftIcon,
+  SignOutIcon,
 } from "@phosphor-icons/react";
 import { TooltipProvider } from "@/components/ui/tooltip";
 import { FluxLogo } from "@/components/shared/flux-logo";
 
 const mainNav = [
-  { href: "/dashboard", icon: House, label: "Dashboard" },
-  { href: "/helpdesk", icon: Ticket, label: "Tickets" },
-  { href: "/projects", icon: Kanban, label: "Projects" },
-  { href: "/documents", icon: Folder, label: "Documents" },
+  { href: "/dashboard", icon: SquaresFourIcon, label: "Dashboard" },
+  { href: "/clients", icon: BuildingsIcon, label: "Clients" },
+  { href: "/tickets", icon: TicketIcon, label: "Tickets" },
+  { href: "/projects", icon: KanbanIcon, label: "Projects" },
+  { href: "/team", icon: UsersThreeIcon, label: "Team" },
+  { href: "/reports", icon: ChartLineIcon, label: "Reports" },
+  { href: "/connectors", icon: PlugIcon, label: "Connectors" },
 ];
 
-const toolsNav = [
-  { href: "/tech-stack", icon: Circuitry, label: "Tech Stack" },
-  { href: "/connectors", icon: Plugs, label: "Connectors" },
-  { href: "/ai-assistant", icon: Robot, label: "AI Assistant" },
-];
-
-const accountNav = [
-  { href: "/settings", icon: Gear, label: "Settings" },
-  { href: "/help", icon: Question, label: "Help & Support" },
+const supportNav = [
+  { href: "/ai-assistant", icon: RobotIcon, label: "AI Assistant" },
+  { href: "/settings", icon: GearSixIcon, label: "Settings" },
 ];
 
 export function Sidebar() {
@@ -83,10 +80,19 @@ export function Sidebar() {
               onClick={() => setMobileOpen(false)}
               className="lg:hidden text-text-on-dark-muted hover:text-white p-1"
             >
-              <X size={20} weight="light" />
+              <XIcon size={20} weight="light" />
             </button>
           )}
         </div>
+
+        {/* Management Label */}
+        {showLabels && (
+          <div className="px-5 pb-1">
+            <span className="text-[10px] font-medium tracking-[0.1em] uppercase text-white/40">
+              MANAGEMENT
+            </span>
+          </div>
+        )}
 
         {/* Divider */}
         <div className="mx-4 border-t border-white/8" />
@@ -112,30 +118,12 @@ export function Sidebar() {
 
           {showLabels && (
             <span className="px-5 mt-5 mb-1.5 block text-[10px] font-medium tracking-[0.1em] uppercase text-text-on-dark-muted">
-              Tools
+              Support
             </span>
           )}
           {!showLabels && <div className="mx-4 my-3 border-t border-white/8" />}
           <div className="space-y-0.5">
-            {toolsNav.map((item) => (
-              <SidebarNavItem
-                key={item.href}
-                href={item.href}
-                Icon={item.icon}
-                label={item.label}
-                collapsed={!showLabels}
-              />
-            ))}
-          </div>
-
-          {showLabels && (
-            <span className="px-5 mt-5 mb-1.5 block text-[10px] font-medium tracking-[0.1em] uppercase text-text-on-dark-muted">
-              Account
-            </span>
-          )}
-          {!showLabels && <div className="mx-4 my-3 border-t border-white/8" />}
-          <div className="space-y-0.5">
-            {accountNav.map((item) => (
+            {supportNav.map((item) => (
               <SidebarNavItem
                 key={item.href}
                 href={item.href}
@@ -153,7 +141,7 @@ export function Sidebar() {
           onClick={toggleExpanded}
           className="hidden lg:flex items-center justify-center h-10 mx-2 mb-1 rounded-md text-text-on-dark-muted hover:text-white hover:bg-navy-95 transition-colors duration-150"
         >
-          <CaretLeft
+          <CaretLeftIcon
             size={18}
             weight="light"
             className={`transition-transform duration-300 ${!isExpanded ? "rotate-180" : ""}`}
@@ -169,20 +157,20 @@ export function Sidebar() {
         >
           <div className="w-8 h-8 rounded-full bg-navy-80 flex items-center justify-center flex-shrink-0">
             <span className="font-[family-name:var(--font-aptos)] font-semibold text-xs text-white">
-              SM
+              AR
             </span>
           </div>
           {showLabels && (
             <div className="flex flex-col min-w-0 flex-1">
               <span className="text-[13px] font-medium text-white truncate">
-                Sarah Mitchell
+                Alex Rivera
               </span>
-              <span className="text-[11px] text-text-on-dark-muted truncate">IT Director</span>
+              <span className="text-[11px] text-text-on-dark-muted truncate">Co-CEO</span>
             </div>
           )}
           {showLabels && (
             <button className="text-text-on-dark-muted hover:text-white transition-colors">
-              <SignOut size={18} weight="light" />
+              <SignOutIcon size={18} weight="light" />
             </button>
           )}
         </div>

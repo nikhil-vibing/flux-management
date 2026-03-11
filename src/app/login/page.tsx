@@ -2,7 +2,7 @@
 
 import { useState } from "react";
 import { useRouter } from "next/navigation";
-import { Eye, EyeSlash, ArrowRight } from "@phosphor-icons/react";
+import { EyeIcon, EyeSlashIcon, ArrowRightIcon } from "@phosphor-icons/react";
 import { FluxLogo } from "@/components/shared/flux-logo";
 
 export default function LoginPage() {
@@ -37,10 +37,10 @@ export default function LoginPage() {
             </div>
           </div>
           <h1 className="font-[family-name:var(--font-aptos)] font-bold text-[44px] leading-[52px] tracking-[-0.03em] text-white mb-4">
-            Your IT Environment<br />Command Center
+            Management<br />Command Center
           </h1>
           <p className="text-lg text-text-on-dark-muted max-w-md">
-            Real-time visibility into tickets, projects, documents, and your complete tech stack.
+            Oversee clients, teams, tickets, and projects from a single dashboard.
           </p>
         </div>
         <p className="text-sm text-text-on-dark-muted">
@@ -61,7 +61,7 @@ export default function LoginPage() {
             Welcome back
           </h2>
           <p className="text-sm text-text-secondary mb-8">
-            Sign in to access your client portal
+            Sign in to your management portal
           </p>
 
           {/* SSO Button */}
@@ -70,7 +70,7 @@ export default function LoginPage() {
             className="w-full h-12 bg-blue hover:bg-blue-light text-white font-medium text-sm rounded-xl btn-premium shadow-level-1 flex items-center justify-center gap-2 transition-colors duration-150 mb-6"
           >
             Sign in with Microsoft SSO
-            <ArrowRight size={16} weight="light" />
+            <ArrowRightIcon size={16} weight="light" />
           </button>
 
           <div className="flex items-center gap-3 mb-6">
@@ -110,7 +110,7 @@ export default function LoginPage() {
                   onClick={() => setShowPassword((p) => !p)}
                   className="absolute right-3 top-1/2 -translate-y-1/2 text-text-muted hover:text-text-secondary transition-colors"
                 >
-                  {showPassword ? <EyeSlash size={18} weight="light" /> : <Eye size={18} weight="light" />}
+                  {showPassword ? <EyeSlashIcon size={18} weight="light" /> : <EyeIcon size={18} weight="light" />}
                 </button>
               </div>
             </div>

@@ -1,140 +1,140 @@
 "use client";
 
+import { useState } from "react";
 import {
-  Headset,
-  RocketLaunch,
-  Shield,
-  Cloud,
-  ArrowsClockwise,
-  CheckCircle,
-  WarningCircle,
-  Plugs,
+  PlugIcon,
+  CheckCircleIcon,
+  WarningCircleIcon,
+  ArrowsClockwiseIcon,
+  CloudIcon,
+  ShieldCheckIcon,
+  UsersIcon,
+  DeviceMobileIcon,
+  ChatCircleIcon,
+  TreeStructureIcon,
+  PlusIcon,
 } from "@phosphor-icons/react";
 import { PageHeader } from "@/components/shared/page-header";
+import { mockConnectors } from "@/data/mock-connectors";
+import type { Connector } from "@/data/types";
+import { cn } from "@/lib/utils";
 
-const connectors = [
-  {
-    id: "atera",
-    name: "Atera",
-    description: "IT management and monitoring platform",
-    icon: Headset,
-    status: "connected" as const,
-    lastSync: "2 minutes ago",
-    metrics: "47 tickets this month \u2022 12 open",
-  },
-  {
-    id: "planner",
-    name: "Microsoft Planner",
-    description: "Task and project management",
-    icon: RocketLaunch,
-    status: "connected" as const,
-    lastSync: "5 minutes ago",
-    metrics: "5 active plans \u2022 23 tasks",
-  },
-  {
-    id: "sharepoint",
-    name: "SharePoint",
-    description: "Document management and collaboration",
-    icon: Shield,
-    status: "connected" as const,
-    lastSync: "10 minutes ago",
-    metrics: "156 documents \u2022 8 folders",
-  },
-  {
-    id: "azure",
-    name: "Azure AD",
-    description: "Identity and access management",
-    icon: Cloud,
-    status: "connected" as const,
-    lastSync: "1 minute ago",
-    metrics: "48 users \u2022 12 groups",
-  },
-  {
-    id: "intune",
-    name: "Microsoft Intune",
-    description: "Device management and compliance",
-    icon: Shield,
-    status: "disconnected" as const,
-    lastSync: "3 hours ago",
-    metrics: "Requires re-authentication",
-  },
-  {
-    id: "teams",
-    name: "Microsoft Teams",
-    description: "Communication and collaboration",
-    icon: RocketLaunch,
-    status: "connected" as const,
-    lastSync: "8 minutes ago",
-    metrics: "15 channels \u2022 32 active users",
-  },
-];
+const connectorIcons: Record<Connector["icon"], typeof PlugIcon> = {
+  atera: TreeStructureIcon,
+  planner: PlugIcon,
+  sharepoint: CloudIcon,
+  "azure-ad": ShieldCheckIcon,
+  intune: DeviceMobileIcon,
+  teams: ChatCircleIcon,
+};
 
 export default function ConnectorsPage() {
+  const [connectors, setConnectors] = useState(mockConnectors);
+
+  const handleReconnect = (id: string) => {
+    setConnectors((prev) =>
+      prev.map((c) =>
+        c.id === id
+          ? { ...c, status: "Connected" as const, lastSynced: "Synced just now", reconnectMessage: undefined, stats: "Reconnecting..." }
+          : c
+      )
+    );
+  };
+
   return (
-    <div className="space-y-6">
+    <div>
       <PageHeader
         title="Connectors"
         subtitle="Manage your external service integrations"
         actions={
-          <button className="flex items-center gap-2 h-9 px-4 bg-blue hover:bg-blue-light text-white text-sm font-medium rounded-xl transition-colors duration-150">
-            <Plugs size={16} weight="light" />
+          <button className="flex items-center gap-2 px-4 py-2.5 bg-navy text-white text-sm font-medium rounded-full hover:bg-navy-95 transition-colors">
+            <PlugIcon size={16} weight="light" />
             Add Connector
           </button>
         }
       />
 
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-        {connectors.map((connector) => {
-          const Icon = connector.icon;
-          const isConnected = connector.status === "connected";
-
-          return (
-            <div
-              key={connector.id}
-              className={`bg-white rounded-2xl shadow-level-1 p-6 hover:shadow-level-2 hover:-translate-y-0.5 transition-all duration-200 cursor-pointer border ${
-                isConnected ? "border-ice/40" : "border-error/30"
-              }`}
-            >
-              <div className="flex items-start justify-between mb-3">
-                <div className="flex items-center justify-center w-10 h-10 rounded-[10px] bg-blue-10">
-                  <Icon size={22} weight="light" className="text-blue" />
-                </div>
-                <div className="flex items-center gap-1.5">
-                  {isConnected ? (
-                    <CheckCircle size={16} weight="fill" className="text-success" />
-                  ) : (
-                    <WarningCircle size={16} weight="fill" className="text-error" />
-                  )}
-                  <span className={`text-xs font-medium ${isConnected ? "text-success" : "text-error"}`}>
-                    {isConnected ? "Connected" : "Disconnected"}
-                  </span>
-                </div>
-              </div>
-
-              <h3 className="font-[family-name:var(--font-aptos)] font-semibold text-[17px] text-text-primary">
-                {connector.name}
-              </h3>
-              <p className="text-[13px] text-text-secondary mt-0.5">
-                {connector.description}
-              </p>
-
-              <div className="mt-3 pt-3 border-t border-ice">
-                <p className="text-xs text-text-muted">{connector.metrics}</p>
-                <div className="flex items-center gap-1.5 mt-1.5 text-text-muted">
-                  <ArrowsClockwise size={12} weight="light" />
-                  <span className="text-[11px]">Synced {connector.lastSync}</span>
-                </div>
-              </div>
-
-              {!isConnected && (
-                <button className="w-full mt-3 h-8 bg-blue-10 text-blue text-xs font-medium rounded-xl hover:bg-blue/10 transition-colors duration-150">
-                  Reconnect
-                </button>
-              )}
-            </div>
-          );
-        })}
+      <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-5">
+        {connectors.map((connector) => (
+          <ConnectorCard
+            key={connector.id}
+            connector={connector}
+            onReconnect={handleReconnect}
+          />
+        ))}
       </div>
+    </div>
+  );
+}
+
+function ConnectorCard({
+  connector,
+  onReconnect,
+}: {
+  connector: Connector;
+  onReconnect: (id: string) => void;
+}) {
+  const isConnected = connector.status === "Connected";
+  const Icon = connectorIcons[connector.icon];
+
+  return (
+    <div
+      className={cn(
+        "bg-white rounded-2xl border p-6 transition-shadow hover:shadow-level-1",
+        isConnected ? "border-ice/40" : "border-error/30"
+      )}
+    >
+      {/* Top row: icon + status */}
+      <div className="flex items-start justify-between mb-4">
+        <div className="w-10 h-10 rounded-xl bg-ice-30 flex items-center justify-center">
+          <Icon size={20} weight="light" className="text-navy" />
+        </div>
+        <div className="flex items-center gap-1.5">
+          {isConnected ? (
+            <>
+              <CheckCircleIcon size={14} weight="fill" className="text-success" />
+              <span className="text-xs font-medium text-success">Connected</span>
+            </>
+          ) : (
+            <>
+              <WarningCircleIcon size={14} weight="fill" className="text-error" />
+              <span className="text-xs font-medium text-error">Disconnected</span>
+            </>
+          )}
+        </div>
+      </div>
+
+      {/* Name + description */}
+      <h3 className="font-[family-name:var(--font-aptos)] font-semibold text-base text-text-primary">
+        {connector.name}
+      </h3>
+      <p className="text-[13px] text-text-secondary mt-0.5">
+        {connector.description}
+      </p>
+
+      {/* Divider */}
+      <div className="border-t border-ice my-4" />
+
+      {/* Stats or reconnect message */}
+      <p className="text-[13px] text-text-secondary min-h-[20px]">
+        {isConnected ? connector.stats : connector.reconnectMessage}
+      </p>
+
+      {/* Sync info */}
+      <div className="flex items-center gap-1.5 mt-2">
+        <ArrowsClockwiseIcon size={12} weight="light" className="text-text-muted" />
+        <span className="text-[11px] text-text-muted">{connector.lastSynced}</span>
+      </div>
+
+      {/* Reconnect button for disconnected */}
+      {!isConnected && (
+        <button
+          onClick={() => onReconnect(connector.id)}
+          className="w-full mt-4 py-2 text-sm font-medium text-blue bg-blue-10 rounded-full hover:bg-blue/10 transition-colors"
+        >
+          Reconnect
+        </button>
+      )}
     </div>
   );
 }

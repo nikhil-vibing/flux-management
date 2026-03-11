@@ -4,22 +4,21 @@ import { usePathname } from "next/navigation";
 import { useSidebarStore } from "@/stores/sidebar-store";
 import { useNotificationStore } from "@/stores/notification-store";
 import {
-  MagnifyingGlass,
-  Bell,
-  List,
-  CaretRight,
+  MagnifyingGlassIcon,
+  BellIcon,
+  ListIcon,
+  CaretRightIcon,
 } from "@phosphor-icons/react";
 
 const routeLabels: Record<string, string> = {
   "/dashboard": "Dashboard",
-  "/helpdesk": "Tickets",
+  "/clients": "Clients",
+  "/tickets": "Tickets",
   "/projects": "Projects",
-  "/documents": "Documents",
-  "/tech-stack": "Tech Stack",
-  "/connectors": "Connectors",
+  "/team": "Team",
+  "/reports": "Reports",
   "/ai-assistant": "AI Assistant",
   "/settings": "Settings",
-  "/help": "Help & Support",
 };
 
 interface TopBarProps {
@@ -48,13 +47,13 @@ export function TopBar({ onSearchClick, onNotificationClick, onUserClick }: TopB
           onClick={() => setMobileOpen(true)}
           className="lg:hidden flex items-center justify-center w-9 h-9 rounded-lg hover:bg-ice-30 transition-colors duration-150"
         >
-          <List size={22} weight="light" className="text-text-primary" />
+          <ListIcon size={22} weight="light" className="text-text-primary" />
         </button>
 
         <nav className="hidden sm:flex items-center gap-1 min-w-0">
           {breadcrumbs.map((crumb, i) => (
             <div key={crumb.path} className="flex items-center gap-1">
-              {i > 0 && <CaretRight size={14} weight="light" className="text-text-muted" />}
+              {i > 0 && <CaretRightIcon size={14} weight="light" className="text-text-muted" />}
               <span
                 className={`text-[13px] truncate ${
                   crumb.isLast
@@ -76,7 +75,7 @@ export function TopBar({ onSearchClick, onNotificationClick, onUserClick }: TopB
           className="flex items-center gap-2 h-9 px-4 rounded-full bg-white/60 border border-ice/80 hover:border-blue/30 hover:bg-white/80 shadow-level-1 transition-all duration-300"
           style={{ width: 420, maxWidth: "100%" }}
         >
-          <MagnifyingGlass size={16} weight="light" className="text-text-muted" />
+          <MagnifyingGlassIcon size={16} weight="light" className="text-text-muted" />
           <span className="text-[13px] text-text-muted flex-1 text-left">Search anything...</span>
           <kbd className="text-[11px] text-text-muted bg-white px-1.5 py-0.5 rounded border border-ice">⌘K</kbd>
         </button>
@@ -89,7 +88,7 @@ export function TopBar({ onSearchClick, onNotificationClick, onUserClick }: TopB
           onClick={onSearchClick}
           className="md:hidden flex items-center justify-center w-9 h-9 rounded-full hover:bg-ice-30 transition-colors duration-150"
         >
-          <MagnifyingGlass size={20} weight="light" className="text-text-secondary" />
+          <MagnifyingGlassIcon size={20} weight="light" className="text-text-secondary" />
         </button>
 
         {/* Notification Bell */}
@@ -97,7 +96,7 @@ export function TopBar({ onSearchClick, onNotificationClick, onUserClick }: TopB
           onClick={onNotificationClick}
           className="relative flex items-center justify-center w-9 h-9 rounded-full hover:bg-ice-30 transition-colors duration-150"
         >
-          <Bell size={20} weight="light" className="text-text-secondary" />
+          <BellIcon size={20} weight="light" className="text-text-secondary" />
           {unreadCount() > 0 && (
             <span className="absolute top-1 right-1 w-2 h-2 rounded-full bg-error ring-2 ring-white" />
           )}
@@ -108,7 +107,7 @@ export function TopBar({ onSearchClick, onNotificationClick, onUserClick }: TopB
           onClick={onUserClick}
           className="flex items-center justify-center w-[34px] h-[34px] rounded-full bg-navy-80 text-white text-xs font-medium hover:ring-2 hover:ring-blue-10 transition-all duration-150"
         >
-          SM
+          AR
         </button>
       </div>
     </header>

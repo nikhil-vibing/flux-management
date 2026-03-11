@@ -4,22 +4,37 @@ import { useState } from "react";
 import { useRouter } from "next/navigation";
 import { motion } from "framer-motion";
 import {
-  CircleDashed, Clock, Timer, Kanban, ArrowsClockwise,
-  CalendarBlank, CalendarCheck, Headset, Shield, CaretRight, ArrowRight,
-  Plus, Export, RocketLaunch,
+  BuildingsIcon, TicketIcon, KanbanIcon, UsersThreeIcon,
+  ShieldCheckIcon, CaretRightIcon,
+  ArrowsClockwiseIcon, CalendarBlankIcon, PlusIcon, ExportIcon,
+  RobotIcon, ArrowUpIcon, ArrowDownIcon,
 } from "@phosphor-icons/react";
 import {
   ComposedChart, Bar, XAxis, YAxis, Tooltip, ResponsiveContainer,
-  Line, CartesianGrid, Legend,
+  Line, CartesianGrid, Legend, PieChart, Pie, Cell,
+  AreaChart, Area,
 } from "recharts";
-import { KpiCard } from "@/components/shared/kpi-card";
 import { StatusBadge } from "@/components/shared/status-badge";
 import { PriorityIndicator } from "@/components/shared/priority-indicator";
 import { TicketSlideOver } from "@/components/shared/ticket-slide-over";
 import { mockTickets } from "@/data/mock-tickets";
 import { mockProjects } from "@/data/mock-projects";
 import { ticketActivity7Days, ticketActivity30Days, ticketActivity90Days } from "@/data/mock-chart-data";
+import { mockClients } from "@/data/mock-clients";
+import { mockTeamMembers } from "@/data/mock-team";
 import type { Ticket } from "@/data/types";
+import { cn } from "@/lib/utils";
+
+/* Sparkline data (last 7 data points for inline micro-charts) */
+const revenueSparkline = [
+  { v: 98 }, { v: 105 }, { v: 95 }, { v: 112 }, { v: 118 }, { v: 115 }, { v: 118.5 },
+];
+const ticketSparkline = [
+  { v: 8 }, { v: 12 }, { v: 10 }, { v: 14 }, { v: 11 }, { v: 9 }, { v: 10 },
+];
+const slaSparkline = [
+  { v: 94.2 }, { v: 95.1 }, { v: 93.8 }, { v: 95.6 }, { v: 96.2 }, { v: 95.8 }, { v: 96.2 },
+];
 
 type ChartRange = "7d" | "30d" | "90d";
 const chartDataMap: Record<ChartRange, typeof ticketActivity7Days> = {
@@ -34,6 +49,12 @@ const statusDotColor: Record<string, string> = {
   "At Risk": "bg-warning",
   Delayed: "bg-error",
 };
+
+const projectStatusData = [
+  { name: "On Track", value: 3, color: "#0D7C5F" },
+  { name: "At Risk", value: 1, color: "#B8860B" },
+  { name: "Delayed", value: 1, color: "#C53030" },
+];
 
 const todayFormatted = new Date().toLocaleDateString("en-US", {
   weekday: "long", year: "numeric", month: "long", day: "numeric",
@@ -50,32 +71,31 @@ export default function DashboardPage() {
     setTimeout(() => setSyncing(false), 500);
   };
 
+  const openTickets = mockTickets.filter((t) => t.status === "Open");
   const recentTickets = mockTickets.slice(0, 5);
-  const activeProjects = mockProjects.filter((p) => p.status !== "Delayed" || p.progress > 0);
-  const dueTodayCount = mockTickets.filter((t) => t.status === "Open" && (t.priority === "Critical" || t.priority === "High")).length;
 
   return (
     <div className="space-y-8">
-      {/* Zone A: Greeting + Metrics */}
+      {/* Zone A: Greeting */}
       <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-2">
         <div>
           <h1 className="font-[family-name:var(--font-aptos)] font-bold text-[28px] leading-9 tracking-[-0.02em] text-text-primary">
-            Good morning, Sarah
+            Good morning, Alex
           </h1>
           <p className="text-sm text-text-secondary mt-0.5">
-            Here&apos;s your IT environment overview
+            Here&apos;s your management overview
           </p>
         </div>
         <div className="flex items-center gap-3 text-text-muted">
           <div className="flex items-center gap-1.5">
-            <CalendarBlank size={16} weight="light" />
+            <CalendarBlankIcon size={16} weight="light" />
             <span className="text-xs">{todayFormatted}</span>
           </div>
           <button
             onClick={handleSync}
             className="flex items-center gap-1.5 text-xs text-text-secondary hover:text-blue transition-colors duration-150"
           >
-            <ArrowsClockwise
+            <ArrowsClockwiseIcon
               size={14}
               weight="light"
               className={syncing ? "animate-spin" : ""}
@@ -85,158 +105,245 @@ export default function DashboardPage() {
         </div>
       </div>
 
-      {/* Metric Pills */}
-      <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 gap-4">
-        <KpiCard
-          icon={<CircleDashed size={20} weight="light" />}
-          value="12"
-          label="Open Tickets"
-          trend={{ value: "3", direction: "up", sentiment: "negative" }}
-          iconBgClass="bg-error-tint"
-          iconColorClass="text-error"
-          onClick={() => router.push("/helpdesk?status=open")}
-          index={0}
-        />
-        <KpiCard
-          icon={<Clock size={20} weight="light" />}
-          value="8"
-          label="Pending Tickets"
-          trend={{ value: "2", direction: "down", sentiment: "positive" }}
-          iconBgClass="bg-warning-tint"
-          iconColorClass="text-warning"
-          onClick={() => router.push("/helpdesk?status=pending")}
-          index={1}
-        />
-        <KpiCard
-          icon={<CalendarCheck size={20} weight="light" />}
-          value={String(dueTodayCount)}
-          label="Due Today"
-          trend={{ value: "1", direction: "up", sentiment: "negative" }}
-          iconBgClass="bg-blue-10"
-          iconColorClass="text-blue"
-          onClick={() => router.push("/helpdesk?status=open")}
-          index={2}
-        />
-        <KpiCard
-          icon={<Timer size={20} weight="light" />}
-          value="4.2h"
-          label="Avg Resolution"
-          trend={{ value: "0.8h", direction: "down", sentiment: "positive" }}
-          iconBgClass="bg-blue-10"
-          iconColorClass="text-blue"
-          index={3}
-        />
-        <KpiCard
-          icon={<Kanban size={20} weight="light" />}
-          value="5"
-          label="Active Projects"
-          iconBgClass="bg-success-tint"
-          iconColorClass="text-success"
-          onClick={() => router.push("/projects")}
-          index={4}
-        />
-      </div>
+      {/* Snapshot Strip — 3 panels, each answers one question */}
+      <motion.div
+        initial={{ opacity: 0, y: 14 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ duration: 0.5, ease: [0.16, 1, 0.3, 1] }}
+        className="grid grid-cols-1 lg:grid-cols-3 gap-4"
+        role="region"
+        aria-label="Key metrics overview"
+      >
+        {/* Panel 1: Clients & Revenue */}
+        <button
+          type="button"
+          className="bg-white rounded-2xl shadow-level-1 border border-ice/40 p-5 text-left card-hover-glow focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue focus-visible:ring-offset-2 transition-shadow"
+          onClick={() => router.push("/clients")}
+          aria-label={`Revenue $118.5K, up 8%. ${mockClients.filter(c => c.contractStatus === "active").length} active clients, ${mockClients.filter(c => c.contractStatus === "expiring").length} expiring. Click to view clients.`}
+        >
+          <div className="flex items-start justify-between gap-3">
+            <div className="flex-1 min-w-0">
+              <div className="flex items-baseline gap-2">
+                <span className="font-[family-name:var(--font-aptos)] font-bold text-[28px] leading-tight tracking-[-0.02em] text-navy">
+                  $118.5K
+                </span>
+                <TrendBadge value="8%" direction="up" sentiment="positive" />
+              </div>
+              <span className="text-[11px] text-text-muted">Monthly Revenue</span>
+            </div>
+            <div className="w-[72px] h-[36px] shrink-0" aria-hidden="true">
+              <ResponsiveContainer width="100%" height="100%">
+                <AreaChart data={revenueSparkline} margin={{ top: 2, right: 0, left: 0, bottom: 2 }}>
+                  <defs>
+                    <linearGradient id="revSpk" x1="0" y1="0" x2="0" y2="1">
+                      <stop offset="0%" stopColor="#0D7C5F" stopOpacity={0.2} />
+                      <stop offset="100%" stopColor="#0D7C5F" stopOpacity={0} />
+                    </linearGradient>
+                  </defs>
+                  <Area type="monotone" dataKey="v" stroke="#0D7C5F" strokeWidth={1.5} fill="url(#revSpk)" dot={false} />
+                </AreaChart>
+              </ResponsiveContainer>
+            </div>
+          </div>
+          <div className="flex items-center gap-2 mt-4 pt-3 border-t border-ice/60 text-[12px]" aria-hidden="true">
+            <BuildingsIcon size={13} weight="light" className="text-text-muted" />
+            <span className="font-semibold text-text-primary">{mockClients.filter(c => c.contractStatus === "active").length}</span>
+            <span className="text-text-muted">active clients</span>
+            {mockClients.filter(c => c.contractStatus === "expiring").length > 0 && (
+              <>
+                <span className="text-text-muted" aria-hidden="true">&middot;</span>
+                <span className="text-warning font-medium">{mockClients.filter(c => c.contractStatus === "expiring").length} expiring</span>
+              </>
+            )}
+          </div>
+        </button>
 
-      {/* Zone B: Ticket Activity Chart */}
-      <div className="bg-white rounded-2xl shadow-level-1 border border-ice/40 p-7">
-        <div className="flex items-center justify-between mb-5">
-          <h2 className="font-[family-name:var(--font-aptos)] font-semibold text-[24px] leading-[32px] tracking-[-0.02em] text-text-primary">
-            Ticket Activity
+        {/* Panel 2: Tickets & SLA */}
+        <button
+          type="button"
+          className="bg-white rounded-2xl shadow-level-1 border border-ice/40 p-5 text-left card-hover-glow focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue focus-visible:ring-offset-2 transition-shadow"
+          onClick={() => router.push("/tickets")}
+          aria-label={`${openTickets.length} open tickets, up 3. ${mockTickets.filter(t => t.priority === "Critical").length} critical, ${mockTickets.filter(t => t.status === "Pending").length} pending. SLA 96.2%, up 1.1%. Click to view tickets.`}
+        >
+          <div className="flex items-start justify-between gap-3">
+            <div className="flex-1 min-w-0">
+              <div className="flex items-baseline gap-2">
+                <span className="font-[family-name:var(--font-aptos)] font-bold text-[28px] leading-tight tracking-[-0.02em] text-navy">
+                  {openTickets.length}
+                </span>
+                <span className="text-[12px] text-text-muted">open tickets</span>
+                <TrendBadge value="3" direction="up" sentiment="negative" />
+              </div>
+              <span className="text-[11px] text-text-muted">
+                {mockTickets.filter(t => t.priority === "Critical").length} critical, {mockTickets.filter(t => t.status === "Pending").length} pending
+              </span>
+            </div>
+            <div className="w-[72px] h-[36px] shrink-0" aria-hidden="true">
+              <ResponsiveContainer width="100%" height="100%">
+                <AreaChart data={ticketSparkline} margin={{ top: 2, right: 0, left: 0, bottom: 2 }}>
+                  <defs>
+                    <linearGradient id="tkSpk" x1="0" y1="0" x2="0" y2="1">
+                      <stop offset="0%" stopColor="#C53030" stopOpacity={0.2} />
+                      <stop offset="100%" stopColor="#C53030" stopOpacity={0} />
+                    </linearGradient>
+                  </defs>
+                  <Area type="monotone" dataKey="v" stroke="#C53030" strokeWidth={1.5} fill="url(#tkSpk)" dot={false} />
+                </AreaChart>
+              </ResponsiveContainer>
+            </div>
+          </div>
+          <div className="flex items-center gap-2 mt-4 pt-3 border-t border-ice/60 text-[12px]" aria-hidden="true">
+            <ShieldCheckIcon size={13} weight="light" className="text-text-muted" />
+            <span className="font-semibold text-text-primary">96.2%</span>
+            <span className="text-text-muted">SLA</span>
+            <TrendBadge value="1.1%" direction="up" sentiment="positive" />
+            {mockClients.filter(c => c.slaCompliance < 90).length > 0 && (
+              <>
+                <span aria-hidden="true">&middot;</span>
+                <span className="text-warning font-medium">{mockClients.filter(c => c.slaCompliance < 90).length} below target</span>
+              </>
+            )}
+          </div>
+        </button>
+
+        {/* Panel 3: Projects & Team */}
+        <button
+          type="button"
+          className="bg-white rounded-2xl shadow-level-1 border border-ice/40 p-5 text-left card-hover-glow focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue focus-visible:ring-offset-2 transition-shadow"
+          onClick={() => router.push("/projects")}
+          aria-label={`${mockProjects.filter((p) => p.progress < 100).length} active projects. ${mockProjects.filter(p => p.status === "At Risk").length} at risk, ${mockProjects.filter(p => p.status === "Delayed").length} delayed. ${mockTeamMembers.filter(m => m.status === "active").length} team members, ${Math.round(mockTeamMembers.filter(m => m.status === "active").reduce((s, m) => s + m.utilization, 0) / mockTeamMembers.filter(m => m.status === "active").length)}% utilized. Click to view projects.`}
+        >
+          <div className="flex items-start justify-between gap-3">
+            <div className="flex-1 min-w-0">
+              <div className="flex items-baseline gap-2">
+                <span className="font-[family-name:var(--font-aptos)] font-bold text-[28px] leading-tight tracking-[-0.02em] text-navy">
+                  {mockProjects.filter((p) => p.progress < 100).length}
+                </span>
+                <span className="text-[12px] text-text-muted">active projects</span>
+              </div>
+              <span className="text-[11px] text-text-muted">
+                {mockProjects.filter(p => p.status === "At Risk").length + mockProjects.filter(p => p.status === "Delayed").length > 0
+                  ? `${mockProjects.filter(p => p.status === "At Risk").length} at risk, ${mockProjects.filter(p => p.status === "Delayed").length} delayed`
+                  : "All on track"
+                }
+              </span>
+            </div>
+            <div className="w-[72px] h-[36px] shrink-0" aria-hidden="true">
+              <ResponsiveContainer width="100%" height="100%">
+                <AreaChart data={slaSparkline} margin={{ top: 2, right: 0, left: 0, bottom: 2 }}>
+                  <defs>
+                    <linearGradient id="slaSpk" x1="0" y1="0" x2="0" y2="1">
+                      <stop offset="0%" stopColor="#15549D" stopOpacity={0.2} />
+                      <stop offset="100%" stopColor="#15549D" stopOpacity={0} />
+                    </linearGradient>
+                  </defs>
+                  <Area type="monotone" dataKey="v" stroke="#15549D" strokeWidth={1.5} fill="url(#slaSpk)" dot={false} />
+                </AreaChart>
+              </ResponsiveContainer>
+            </div>
+          </div>
+          <div className="flex items-center gap-2 mt-4 pt-3 border-t border-ice/60 text-[12px]" aria-hidden="true">
+            <UsersThreeIcon size={13} weight="light" className="text-text-muted" />
+            <span className="font-semibold text-text-primary">{mockTeamMembers.filter(m => m.status === "active").length}</span>
+            <span className="text-text-muted">team members</span>
+            <span aria-hidden="true">&middot;</span>
+            <span className="text-text-secondary font-medium">
+              {Math.round(mockTeamMembers.filter(m => m.status === "active").reduce((s, m) => s + m.utilization, 0) / mockTeamMembers.filter(m => m.status === "active").length)}% utilized
+            </span>
+          </div>
+        </button>
+      </motion.div>
+
+      {/* Charts Row */}
+      <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+        {/* Ticket Activity Chart - 2 cols */}
+        <div className="lg:col-span-2 bg-white rounded-2xl shadow-level-1 border border-ice/40 p-7">
+          <div className="flex items-center justify-between mb-5">
+            <h2 className="font-[family-name:var(--font-aptos)] font-semibold text-lg text-text-primary">
+              Ticket Activity
+            </h2>
+            <div className="flex items-center rounded-lg border border-ice/60 overflow-hidden shadow-level-1">
+              {(["7d", "30d", "90d"] as ChartRange[]).map((range) => (
+                <button
+                  key={range}
+                  onClick={() => setChartRange(range)}
+                  className={`px-3 py-1.5 text-xs font-medium transition-colors duration-150 ${
+                    chartRange === range
+                      ? "bg-navy text-white"
+                      : "text-text-secondary hover:bg-ice-30"
+                  }`}
+                >
+                  {chartLabels[range]}
+                </button>
+              ))}
+            </div>
+          </div>
+          <ResponsiveContainer width="100%" height={220}>
+            <ComposedChart data={chartDataMap[chartRange]} margin={{ top: 4, right: 4, left: -16, bottom: 0 }}>
+              <CartesianGrid strokeDasharray="3 3" stroke="#ECEEF2" vertical={false} />
+              <XAxis dataKey="date" tick={{ fontSize: 11, fill: "#8896A6" }} axisLine={false} tickLine={false} />
+              <YAxis tick={{ fontSize: 11, fill: "#8896A6" }} axisLine={false} tickLine={false} />
+              <Tooltip
+                contentStyle={{ backgroundColor: "#002B4D", border: "none", borderRadius: "12px", color: "#fff", fontSize: "12px" }}
+                itemStyle={{ color: "#fff" }}
+                labelStyle={{ color: "#A3B8CC", marginBottom: "4px" }}
+              />
+              <Legend verticalAlign="bottom" height={36} iconType="circle" iconSize={8}
+                formatter={(value: string) => <span className="text-xs text-text-muted capitalize">{value}</span>}
+              />
+              <Bar dataKey="open" stackId="tickets" fill="#C53030" radius={[0, 0, 0, 0]} barSize={24} />
+              <Bar dataKey="pending" stackId="tickets" fill="#B8860B" radius={[0, 0, 0, 0]} barSize={24} />
+              <Bar dataKey="closed" stackId="tickets" fill="#0D7C5F" radius={[2, 2, 0, 0]} barSize={24} />
+              <Line type="monotone" dataKey="total" stroke="#15549D" strokeWidth={2} dot={false} />
+            </ComposedChart>
+          </ResponsiveContainer>
+        </div>
+
+        {/* Projects by Status - 1 col */}
+        <div className="bg-white rounded-2xl shadow-level-1 border border-ice/40 p-7">
+          <h2 className="font-[family-name:var(--font-aptos)] font-semibold text-lg text-text-primary mb-5">
+            Projects by Status
           </h2>
-          <div className="flex items-center rounded-lg border border-ice/60 overflow-hidden shadow-level-1">
-            {(["7d", "30d", "90d"] as ChartRange[]).map((range) => (
-              <button
-                key={range}
-                onClick={() => setChartRange(range)}
-                className={`px-3 py-1.5 text-xs font-medium transition-colors duration-150 ${
-                  chartRange === range
-                    ? "bg-navy text-white"
-                    : "text-text-secondary hover:bg-ice-30"
-                }`}
-              >
-                {chartLabels[range]}
-              </button>
+          <ResponsiveContainer width="100%" height={180}>
+            <PieChart>
+              <Pie data={projectStatusData} cx="50%" cy="50%" innerRadius={50} outerRadius={75} dataKey="value" paddingAngle={2}>
+                {projectStatusData.map((entry) => (
+                  <Cell key={entry.name} fill={entry.color} />
+                ))}
+              </Pie>
+              <Tooltip contentStyle={{ backgroundColor: "#002B4D", border: "none", borderRadius: "12px", color: "#fff", fontSize: "12px" }} />
+            </PieChart>
+          </ResponsiveContainer>
+          <div className="flex justify-center gap-4 mt-2">
+            {projectStatusData.map((s) => (
+              <div key={s.name} className="flex items-center gap-1.5">
+                <span className="w-2 h-2 rounded-full" style={{ backgroundColor: s.color }} />
+                <span className="text-xs text-text-muted">{s.name} ({s.value})</span>
+              </div>
             ))}
           </div>
         </div>
-
-        <ResponsiveContainer width="100%" height={240}>
-          <ComposedChart data={chartDataMap[chartRange]} margin={{ top: 4, right: 4, left: -16, bottom: 0 }}>
-            <CartesianGrid strokeDasharray="3 3" stroke="#ECEEF2" vertical={false} />
-            <XAxis
-              dataKey="date"
-              tick={{ fontSize: 11, fill: "#8896A6" }}
-              axisLine={false}
-              tickLine={false}
-            />
-            <YAxis
-              tick={{ fontSize: 11, fill: "#8896A6" }}
-              axisLine={false}
-              tickLine={false}
-            />
-            <Tooltip
-              contentStyle={{
-                backgroundColor: "#002B4D",
-                border: "none",
-                borderRadius: "12px",
-                color: "#fff",
-                fontSize: "12px",
-              }}
-              itemStyle={{ color: "#fff" }}
-              labelStyle={{ color: "#A3B8CC", marginBottom: "4px" }}
-            />
-            <Legend
-              verticalAlign="bottom"
-              height={36}
-              iconType="circle"
-              iconSize={8}
-              formatter={(value: string) => (
-                <span className="text-xs text-text-muted capitalize">
-                  {value}
-                </span>
-              )}
-            />
-            <Bar dataKey="open" stackId="tickets" fill="#C53030" radius={[0, 0, 0, 0]} barSize={24} />
-            <Bar dataKey="pending" stackId="tickets" fill="#B8860B" radius={[0, 0, 0, 0]} barSize={24} />
-            <Bar dataKey="closed" stackId="tickets" fill="#0D7C5F" radius={[2, 2, 0, 0]} barSize={24} />
-            <Line type="monotone" dataKey="total" stroke="#15549D" strokeWidth={2} dot={false} />
-          </ComposedChart>
-        </ResponsiveContainer>
-
-        <div className="flex justify-end mt-3">
-          <button
-            onClick={() => router.push("/helpdesk")}
-            className="flex items-center gap-1 text-xs font-medium text-blue hover:underline"
-          >
-            View all tickets <CaretRight size={12} weight="light" />
-          </button>
-        </div>
       </div>
 
-      {/* Zone B: Recent Tickets Table */}
+      {/* Recent Tickets Table */}
       <div className="bg-white rounded-2xl shadow-level-1 border border-ice/40 p-7">
         <div className="flex items-center justify-between mb-4">
-          <h2 className="font-[family-name:var(--font-aptos)] font-semibold text-[24px] leading-[32px] tracking-[-0.02em] text-text-primary">
+          <h2 className="font-[family-name:var(--font-aptos)] font-semibold text-lg text-text-primary">
             Recent Tickets
           </h2>
           <button
-            onClick={() => router.push("/helpdesk")}
+            onClick={() => router.push("/tickets")}
             className="flex items-center gap-1 text-xs font-medium text-blue hover:underline"
           >
-            View all <CaretRight size={12} weight="light" />
+            View all <CaretRightIcon size={12} weight="light" />
           </button>
         </div>
         <div className="overflow-x-auto">
           <table className="w-full text-left">
             <thead>
               <tr className="border-b border-ice">
-                {["Ticket #", "Subject", "Status", "Priority", "Updated"].map((h) => (
-                  <th
-                    key={h}
-                    className="pb-2 pr-4 text-[11px] uppercase tracking-[0.08em] text-text-muted font-medium"
-                  >
-                    {h}
-                  </th>
+                {["Ticket #", "Subject", "Client", "Status", "Priority", "Updated"].map((h) => (
+                  <th key={h} className="pb-2 pr-4 text-[11px] uppercase tracking-[0.08em] text-text-muted font-medium">{h}</th>
                 ))}
               </tr>
             </thead>
@@ -248,23 +355,12 @@ export default function DashboardPage() {
                   onClick={() => setSelectedTicket(ticket)}
                   className="border-b border-ice last:border-0 cursor-pointer transition-colors"
                 >
-                  <td className="py-3 pr-4">
-                    <span className="font-mono text-sm text-blue">
-                      #{ticket.id}
-                    </span>
-                  </td>
-                  <td className="py-3 pr-4 text-sm text-text-primary max-w-[260px] truncate">
-                    {ticket.subject}
-                  </td>
-                  <td className="py-3 pr-4">
-                    <StatusBadge status={ticket.status} />
-                  </td>
-                  <td className="py-3 pr-4">
-                    <PriorityIndicator priority={ticket.priority} />
-                  </td>
-                  <td className="py-3 text-xs text-text-muted whitespace-nowrap">
-                    {ticket.updated}
-                  </td>
+                  <td className="py-3 pr-4"><span className="font-mono text-sm text-blue">#{ticket.id}</span></td>
+                  <td className="py-3 pr-4 text-sm text-text-primary max-w-[220px] truncate">{ticket.subject}</td>
+                  <td className="py-3 pr-4 text-xs text-text-secondary">{ticket.clientName}</td>
+                  <td className="py-3 pr-4"><StatusBadge status={ticket.status} /></td>
+                  <td className="py-3 pr-4"><PriorityIndicator priority={ticket.priority} /></td>
+                  <td className="py-3 text-xs text-text-muted whitespace-nowrap">{ticket.updated}</td>
                 </motion.tr>
               ))}
             </tbody>
@@ -272,21 +368,21 @@ export default function DashboardPage() {
         </div>
       </div>
 
-      {/* Zone C: Active Projects */}
+      {/* Active Projects */}
       <div className="bg-white rounded-2xl shadow-level-1 border border-ice/40 p-7">
         <div className="flex items-center justify-between mb-4">
-          <h2 className="font-[family-name:var(--font-aptos)] font-semibold text-[24px] leading-[32px] tracking-[-0.02em] text-text-primary">
+          <h2 className="font-[family-name:var(--font-aptos)] font-semibold text-lg text-text-primary">
             Active Projects
           </h2>
           <button
             onClick={() => router.push("/projects")}
             className="flex items-center gap-1 text-xs font-medium text-blue hover:underline"
           >
-            View all <CaretRight size={12} weight="light" />
+            View all <CaretRightIcon size={12} weight="light" />
           </button>
         </div>
         <div className="flex gap-4 overflow-x-auto pb-2 -mx-1 px-1">
-          {activeProjects.map((project) => (
+          {mockProjects.map((project) => (
             <div
               key={project.id}
               className="min-w-[300px] border border-ice/50 rounded-2xl p-5 bg-white shrink-0 hover:shadow-level-2 hover:-translate-y-0.5 transition-all duration-200 cursor-pointer"
@@ -295,25 +391,18 @@ export default function DashboardPage() {
               <p className="font-[family-name:var(--font-aptos)] font-semibold text-sm text-text-primary truncate">
                 {project.name}
               </p>
+              <p className="text-xs text-text-muted mt-0.5">{project.clientName}</p>
               <div className="flex items-center gap-1.5 mt-2">
                 <span className={`w-2 h-2 rounded-full ${statusDotColor[project.status]}`} />
-                <span className="text-xs text-text-secondary">
-                  {project.status}
-                </span>
+                <span className="text-xs text-text-secondary">{project.status}</span>
               </div>
               <div className="mt-3 w-full bg-ice-50 rounded-full h-1.5">
-                <div
-                  className="bg-blue h-1.5 rounded-full transition-all"
-                  style={{ width: `${project.progress}%` }}
-                />
+                <div className="bg-blue h-1.5 rounded-full transition-all" style={{ width: `${project.progress}%` }} />
               </div>
               <div className="flex items-center justify-between mt-2.5">
-                <span className="text-xs text-text-muted">
-                  {project.tasksCompleted}/{project.totalTasks} tasks
-                </span>
+                <span className="text-xs text-text-muted">{project.tasksCompleted}/{project.totalTasks} tasks</span>
                 <span className="flex items-center gap-1 text-xs text-text-muted">
-                  <CalendarBlank size={12} weight="light" />
-                  {project.dueDate}
+                  <CalendarBlankIcon size={12} weight="light" />{project.dueDate}
                 </span>
               </div>
             </div>
@@ -321,77 +410,44 @@ export default function DashboardPage() {
         </div>
       </div>
 
-      {/* Zone D: Connected Services */}
-      <div className="bg-white rounded-2xl shadow-level-1 border border-ice/40 p-7">
-        <div className="flex items-center justify-between mb-4">
-          <h2 className="font-[family-name:var(--font-aptos)] font-semibold text-[24px] leading-[32px] tracking-[-0.02em] text-text-primary">
-            Connected Services
-          </h2>
-          <button
-            onClick={() => router.push("/connectors")}
-            className="flex items-center gap-1 text-xs font-medium text-blue hover:underline"
-          >
-            Manage <ArrowRight size={12} weight="light" />
-          </button>
-        </div>
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
-          {[
-            { name: "Atera", icon: Headset, summary: "47 tickets this month \u2022 12 open" },
-            { name: "Microsoft Planner", icon: RocketLaunch, summary: "5 active plans \u2022 23 tasks" },
-            { name: "SharePoint", icon: Shield, summary: "156 documents \u2022 8 folders" },
-          ].map((service) => (
-            <div
-              key={service.name}
-              className="flex items-start gap-3 border border-ice/50 rounded-2xl p-5 hover:shadow-level-2 hover:-translate-y-0.5 transition-all duration-200 cursor-pointer"
-            >
-              <div className="flex items-center justify-center w-9 h-9 rounded-full bg-blue-10 shrink-0">
-                <service.icon size={18} weight="light" className="text-blue" />
-              </div>
-              <div className="min-w-0">
-                <p className="font-medium text-sm text-text-primary">
-                  {service.name}
-                </p>
-                <div className="flex items-center gap-1.5 mt-0.5">
-                  <span className="w-1.5 h-1.5 rounded-full bg-success" />
-                  <span className="text-xs text-success font-medium">
-                    Connected
-                  </span>
-                </div>
-                <p className="text-xs text-text-muted mt-1.5">
-                  {service.summary}
-                </p>
-              </div>
-            </div>
-          ))}
-        </div>
-      </div>
-
-      {/* Zone E: Quick Actions Floating Bar */}
+      {/* Quick Actions */}
       <div className="fixed bottom-20 md:bottom-6 left-1/2 -translate-x-1/2 z-30">
         <div className="flex items-center gap-2 bg-navy/95 backdrop-blur-xl px-5 py-3 rounded-full shadow-level-4">
           <button
-            onClick={() => router.push("/helpdesk")}
+            onClick={() => router.push("/tickets")}
             className="flex items-center gap-2 bg-blue hover:bg-blue-light text-white text-xs font-medium px-4 py-2 rounded-full transition-colors duration-150"
           >
-            <Plus size={14} weight="light" />
+            <PlusIcon size={14} weight="light" />
             New Ticket
           </button>
           <button className="flex items-center gap-2 text-text-on-dark-muted hover:text-white text-xs font-medium px-3 py-2 rounded-full transition-colors duration-150">
-            <Export size={14} weight="light" />
+            <ExportIcon size={14} weight="light" />
             Export
           </button>
           <button
             onClick={() => router.push("/ai-assistant")}
             className="flex items-center gap-2 text-text-on-dark-muted hover:text-white text-xs font-medium px-3 py-2 rounded-full transition-colors duration-150"
           >
-            <RocketLaunch size={14} weight="light" />
+            <RobotIcon size={14} weight="light" />
             AI Assistant
           </button>
         </div>
       </div>
 
-      {/* Ticket SlideOver */}
       <TicketSlideOver ticket={selectedTicket} onClose={() => setSelectedTicket(null)} />
     </div>
+  );
+}
+
+/* Inline trend badge — compact directional indicator */
+function TrendBadge({ value, direction, sentiment }: { value: string; direction: "up" | "down"; sentiment: "positive" | "negative" }) {
+  const color = sentiment === "positive" ? "text-success" : "text-error";
+  const Icon = direction === "up" ? ArrowUpIcon : ArrowDownIcon;
+  const srLabel = `${direction === "up" ? "increased" : "decreased"} by ${value}`;
+  return (
+    <span className={cn("inline-flex items-center gap-0.5 text-[11px] font-medium", color)} role="img" aria-label={srLabel}>
+      <Icon size={10} weight="bold" aria-hidden="true" />
+      <span aria-hidden="true">{value}</span>
+    </span>
   );
 }

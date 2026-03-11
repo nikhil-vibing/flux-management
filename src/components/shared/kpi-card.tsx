@@ -1,7 +1,7 @@
 "use client";
 
 import { type ReactNode } from "react";
-import { ArrowUp, ArrowDown } from "@phosphor-icons/react";
+import { ArrowUpIcon, ArrowDownIcon } from "@phosphor-icons/react";
 import { motion } from "framer-motion";
 import { cn } from "@/lib/utils";
 
@@ -70,7 +70,7 @@ export function KpiCard({
       {trend && (
         <div className="ml-auto flex items-center gap-1 shrink-0">
           {trend.direction === "up" ? (
-            <ArrowUp
+            <ArrowUpIcon
               size={12}
               weight="light"
               className={
@@ -80,7 +80,7 @@ export function KpiCard({
               }
             />
           ) : (
-            <ArrowDown
+            <ArrowDownIcon
               size={12}
               weight="light"
               className={

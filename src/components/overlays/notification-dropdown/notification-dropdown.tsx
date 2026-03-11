@@ -1,7 +1,15 @@
 "use client";
 
 import { useNotificationStore } from "@/stores/notification-store";
-import { Ticket, Kanban, GearSix, Bell } from "@phosphor-icons/react";
+import {
+  TicketIcon,
+  KanbanIcon,
+  GearSixIcon,
+  BellIcon,
+  UsersThreeIcon,
+  WarningIcon,
+  BuildingsIcon,
+} from "@phosphor-icons/react";
 import { AnimatePresence, motion } from "framer-motion";
 import type { Notification } from "@/data/types";
 import { useRef, useEffect } from "react";
@@ -19,15 +27,22 @@ const tabs = [
 ];
 
 function NotificationIcon({ type }: { type: Notification["type"] }) {
-  const config = {
-    ticket: { icon: <Ticket size={18} weight="light" />, bg: "bg-blue-10", color: "text-blue" },
-    project: { icon: <Kanban size={18} weight="light" />, bg: "bg-success-tint", color: "text-success" },
-    system: { icon: <GearSix size={18} weight="light" />, bg: "bg-ice-30", color: "text-text-secondary" },
-  }[type];
+  const config: Record<string, { icon: React.ReactNode; bg: string; color: string }> = {
+    ticket: { icon: <TicketIcon size={18} weight="light" />, bg: "bg-blue-10", color: "text-blue" },
+    ticket_escalation: { icon: <WarningIcon size={18} weight="light" />, bg: "bg-error/10", color: "text-error" },
+    project: { icon: <KanbanIcon size={18} weight="light" />, bg: "bg-success-tint", color: "text-success" },
+    system: { icon: <GearSixIcon size={18} weight="light" />, bg: "bg-ice-30", color: "text-text-secondary" },
+    task_assignment: { icon: <KanbanIcon size={18} weight="light" />, bg: "bg-blue-10", color: "text-blue" },
+    contact_form: { icon: <BuildingsIcon size={18} weight="light" />, bg: "bg-blue-10", color: "text-blue" },
+    health_alert: { icon: <WarningIcon size={18} weight="light" />, bg: "bg-warning/10", color: "text-warning" },
+    team_update: { icon: <UsersThreeIcon size={18} weight="light" />, bg: "bg-success-tint", color: "text-success" },
+  };
+
+  const c = config[type] || config.system;
 
   return (
-    <div className={`w-9 h-9 rounded-full ${config.bg} ${config.color} flex items-center justify-center flex-shrink-0`}>
-      {config.icon}
+    <div className={`w-9 h-9 rounded-full ${c.bg} ${c.color} flex items-center justify-center flex-shrink-0`}>
+      {c.icon}
     </div>
   );
 }
@@ -49,9 +64,9 @@ export function NotificationDropdown({ open, onClose }: NotificationDropdownProp
     activeTab === "all"
       ? notifications
       : notifications.filter((n) => {
-          if (activeTab === "tickets") return n.type === "ticket";
-          if (activeTab === "projects") return n.type === "project";
-          return n.type === "system";
+          if (activeTab === "tickets") return n.type === "ticket" || n.type === "ticket_escalation";
+          if (activeTab === "projects") return n.type === "project" || n.type === "task_assignment";
+          return n.type === "system" || n.type === "health_alert" || n.type === "team_update" || n.type === "contact_form";
         });
 
   return (
@@ -101,7 +116,7 @@ export function NotificationDropdown({ open, onClose }: NotificationDropdownProp
           <div className="flex-1 overflow-y-auto custom-scrollbar">
             {filtered.length === 0 ? (
               <div className="flex flex-col items-center py-12">
-                <Bell size={48} weight="light" className="text-silver-dark mb-2" />
+                <BellIcon size={48} weight="light" className="text-silver-dark mb-2" />
                 <p className="text-sm text-text-muted">No notifications</p>
               </div>
             ) : (

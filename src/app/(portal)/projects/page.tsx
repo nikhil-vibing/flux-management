@@ -4,17 +4,14 @@ import { useState, useMemo } from "react";
 import Link from "next/link";
 import { motion } from "framer-motion";
 import {
-  Kanban,
-  CheckCircle,
-  ChartPie,
-  GridFour,
-  Rows,
-  ChartLine,
-  CalendarBlank,
-  DotsThreeVertical,
-  CaretRight,
-  Eye,
-  Link as LinkIcon,
+  KanbanIcon,
+  CheckCircleIcon,
+  ChartPieIcon,
+  GridFourIcon,
+  RowsIcon,
+  ChartLineIcon,
+  CalendarBlankIcon,
+  DotsThreeVerticalIcon,
 } from "@phosphor-icons/react";
 import { mockProjects } from "@/data/mock-projects";
 import type { Project, ProjectStatus } from "@/data/types";
@@ -90,10 +87,10 @@ export default function ProjectsPage() {
       : 0;
 
   /* View toggle buttons config */
-  const viewButtons: { mode: ViewMode; icon: typeof GridFour; label: string }[] = [
-    { mode: "cards", icon: GridFour, label: "Cards" },
-    { mode: "list", icon: Rows, label: "List" },
-    { mode: "timeline", icon: ChartLine, label: "Timeline" },
+  const viewButtons: { mode: ViewMode; icon: typeof GridFourIcon; label: string }[] = [
+    { mode: "cards", icon: GridFourIcon, label: "Cards" },
+    { mode: "list", icon: RowsIcon, label: "List" },
+    { mode: "timeline", icon: ChartLineIcon, label: "Timeline" },
   ];
 
   return (
@@ -101,7 +98,7 @@ export default function ProjectsPage() {
       {/* ── Header ── */}
       <PageHeader
         title="Projects"
-        subtitle="Track your active projects and milestones"
+        subtitle="Track all client projects and milestones"
         actions={
           <div className="flex items-center bg-ice-30 rounded-lg p-0.5">
             {viewButtons.map(({ mode, icon: Icon, label }) => (
@@ -126,7 +123,7 @@ export default function ProjectsPage() {
       {/* ── KPI Row ── */}
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
         <KpiCard
-          icon={<Kanban size={20} weight="light" />}
+          icon={<KanbanIcon size={20} weight="light" />}
           value={String(activeCount)}
           label="Active Projects"
           iconBgClass="bg-blue-10"
@@ -134,7 +131,7 @@ export default function ProjectsPage() {
           index={0}
         />
         <KpiCard
-          icon={<CheckCircle size={20} weight="light" />}
+          icon={<CheckCircleIcon size={20} weight="light" />}
           value={`${totalCompleted}/${totalTasks}`}
           label="Tasks Completed"
           iconBgClass="bg-success-tint"
@@ -142,7 +139,7 @@ export default function ProjectsPage() {
           index={1}
         />
         <KpiCard
-          icon={<ChartPie size={20} weight="light" />}
+          icon={<ChartPieIcon size={20} weight="light" />}
           value={`${onTrackPct}%`}
           label="On Track"
           iconBgClass="bg-success-tint"
@@ -191,7 +188,7 @@ function CardsView({ projects }: { projects: Project[] }) {
                   onClick={(e) => e.preventDefault()}
                   className="w-7 h-7 flex items-center justify-center rounded-md hover:bg-ice-30 transition-colors text-text-muted"
                 >
-                  <DotsThreeVertical size={18} weight="light" />
+                  <DotsThreeVerticalIcon size={18} weight="light" />
                 </button>
               </div>
 
@@ -199,6 +196,7 @@ function CardsView({ projects }: { projects: Project[] }) {
               <h3 className="font-[family-name:var(--font-aptos)] font-semibold text-base text-navy mt-3 leading-snug line-clamp-1">
                 {project.name}
               </h3>
+              <p className="text-xs text-text-muted mt-0.5">{project.clientName}</p>
 
               {/* Progress bar */}
               <div className="mt-4">
@@ -217,7 +215,7 @@ function CardsView({ projects }: { projects: Project[] }) {
               {/* Bottom row: date + avatars */}
               <div className="flex items-center justify-between mt-4">
                 <div className="flex items-center gap-1.5 text-text-secondary">
-                  <CalendarBlank size={14} weight="light" />
+                  <CalendarBlankIcon size={14} weight="light" />
                   <span className="text-xs">{project.dueDate}</span>
                 </div>
 
