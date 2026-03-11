@@ -32,6 +32,7 @@ CLAUDE.md
 # Brand & internal docs (not for repo)
 *.pdf
 UNIVERSAL_VIBE_CODING_AGENT.md
+style-flux.md
 
 # Misc
 *.tsbuildinfo
