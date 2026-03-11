@@ -1,12 +1,19 @@
 "use client";
 
 import { useRouter } from "next/navigation";
+import { motion } from "framer-motion";
 import {
   CurrencyDollarIcon,
   UsersThreeIcon,
   ShieldCheckIcon,
   ClockIcon,
+  ArrowRightIcon,
+  ChartLineUpIcon,
+  TrendUpIcon,
+  ChartBarIcon,
+  TargetIcon,
 } from "@phosphor-icons/react";
+import { PageHeader } from "@/components/shared/page-header";
 
 const reportTypes = [
   {
@@ -16,6 +23,10 @@ const reportTypes = [
     iconBg: "bg-success-tint",
     iconColor: "text-success",
     href: "/reports/revenue",
+    stat: "$118.5K",
+    statLabel: "This month",
+    accentColor: "#0D7C5F",
+    secondaryIcon: TrendUpIcon,
   },
   {
     title: "Team Performance",
@@ -24,6 +35,10 @@ const reportTypes = [
     iconBg: "bg-blue-10",
     iconColor: "text-blue",
     href: "/reports/team-performance",
+    stat: "87%",
+    statLabel: "Avg utilization",
+    accentColor: "#15549D",
+    secondaryIcon: ChartBarIcon,
   },
   {
     title: "SLA Compliance",
@@ -32,6 +47,10 @@ const reportTypes = [
     iconBg: "bg-blue-10",
     iconColor: "text-blue",
     href: "/reports/sla-compliance",
+    stat: "96.2%",
+    statLabel: "Compliance rate",
+    accentColor: "#1A6BC4",
+    secondaryIcon: TargetIcon,
   },
   {
     title: "Ticket Analytics",
@@ -40,35 +59,108 @@ const reportTypes = [
     iconBg: "bg-error-tint",
     iconColor: "text-error",
     href: "/reports/ticket-analytics",
+    stat: "4.2h",
+    statLabel: "Avg resolution",
+    accentColor: "#C53030",
+    secondaryIcon: ChartLineUpIcon,
   },
 ] as const;
+
+const containerVariants = {
+  hidden: { opacity: 0 },
+  visible: {
+    opacity: 1,
+    transition: { staggerChildren: 0.08, delayChildren: 0.1 },
+  },
+};
+
+const cardVariants = {
+  hidden: { opacity: 0, y: 16 },
+  visible: {
+    opacity: 1,
+    y: 0,
+    transition: { duration: 0.4, ease: [0.16, 1, 0.3, 1] as [number, number, number, number] },
+  },
+};
 
 export default function ReportsPage() {
   const router = useRouter();
 
   return (
     <div>
-      <div className="mb-8">
-        <h1 className="text-2xl font-bold font-[family-name:var(--font-aptos)]">Reports</h1>
-        <p className="text-sm text-text-muted mt-1">Analytics and insights</p>
-      </div>
+      <PageHeader title="Reports" subtitle="Analytics and insights" />
 
-      <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
+      <motion.div
+        variants={containerVariants}
+        initial="hidden"
+        animate="visible"
+        className="grid grid-cols-1 sm:grid-cols-2 gap-5"
+      >
         {reportTypes.map((report) => (
-          <div
+          <motion.button
             key={report.href}
+            variants={cardVariants}
+            type="button"
             onClick={() => router.push(report.href)}
-            className="bg-white rounded-2xl shadow-level-1 border border-ice/40 p-7 hover:shadow-level-2 hover:-translate-y-0.5 transition-all duration-200 cursor-pointer"
+            className="group relative bg-white rounded-2xl shadow-level-1 border border-ice/40 p-6 text-left card-hover-glow focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue focus-visible:ring-offset-2 transition-all duration-200 overflow-hidden"
           >
-            <div className={`w-12 h-12 rounded-xl ${report.iconBg} flex items-center justify-center mb-4`}>
-              <report.icon size={24} className={report.iconColor} weight="duotone" />
+            {/* Subtle accent gradient in top-right corner */}
+            <div
+              className="absolute top-0 right-0 w-32 h-32 opacity-[0.04] group-hover:opacity-[0.07] transition-opacity duration-300 rounded-bl-full"
+              style={{
+                background: `radial-gradient(circle at top right, ${report.accentColor}, transparent 70%)`,
+              }}
+              aria-hidden="true"
+            />
+
+            <div className="relative flex items-start justify-between">
+              <div
+                className={`w-11 h-11 rounded-xl ${report.iconBg} flex items-center justify-center`}
+              >
+                <report.icon
+                  size={22}
+                  className={report.iconColor}
+                  weight="duotone"
+                />
+              </div>
+              <report.secondaryIcon
+                size={18}
+                className="text-ice opacity-60 group-hover:opacity-100 group-hover:text-text-muted transition-all duration-200"
+                weight="light"
+                aria-hidden="true"
+              />
             </div>
-            <h2 className="font-semibold text-base">{report.title}</h2>
-            <p className="text-sm text-text-muted mt-1">{report.description}</p>
-            <span className="text-xs text-blue mt-3 inline-block">View Report &rarr;</span>
-          </div>
+
+            <div className="relative mt-4">
+              <h2 className="font-[family-name:var(--font-aptos)] font-semibold text-[15px] text-text-primary">
+                {report.title}
+              </h2>
+              <p className="text-[13px] text-text-muted mt-0.5 leading-relaxed">
+                {report.description}
+              </p>
+            </div>
+
+            <div className="relative flex items-center justify-between mt-5 pt-4 border-t border-ice/50">
+              <div>
+                <span className="font-[family-name:var(--font-aptos)] font-bold text-lg text-navy">
+                  {report.stat}
+                </span>
+                <span className="text-[11px] text-text-muted ml-1.5">
+                  {report.statLabel}
+                </span>
+              </div>
+              <span className="flex items-center gap-1 text-xs font-medium text-blue group-hover:gap-2 transition-all duration-200">
+                View
+                <ArrowRightIcon
+                  size={13}
+                  weight="bold"
+                  className="group-hover:translate-x-0.5 transition-transform duration-200"
+                />
+              </span>
+            </div>
+          </motion.button>
         ))}
-      </div>
+      </motion.div>
     </div>
   );
 }
