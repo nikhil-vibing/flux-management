@@ -1,3 +1,0 @@
-module.exports=[45644,a=>{a.v({className:"roboto_93298b4a-module__FQzCNG__className",variable:"roboto_93298b4a-module__FQzCNG__variable"})},27572,a=>{"use strict";var b=a.i(7997),c=a.i(45644);let d={className:c.default.className,style:{fontFamily:"'Roboto', 'Roboto Fallback'",fontStyle:"normal"}};function e({children:a}){return(0,b.jsx)("html",{lang:"en",className:d.variable,children:(0,b.jsx)("body",{suppressHydrationWarning:!0,children:a})})}null!=c.default.variable&&(d.variable=c.default.variable),a.s(["default",()=>e,"metadata",0,{title:"Flux Technologies — Client Portal",description:"Your IT environment command center"}],27572)}];
-
-//# sourceMappingURL=%5Broot-of-the-server%5D__3e51044b._.js.map
