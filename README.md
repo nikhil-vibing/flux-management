@@ -83,3 +83,7 @@ src/
 - **Semantic:** Success (#0D7C5F), Warning (#B8860B), Error (#C53030)
 - **4 shadow levels** for depth hierarchy
 - **Responsive:** Mobile-first with collapsible sidebar, bottom nav on mobile
+
+## Contributors
+
+- [Nikhil Sharma](https://github.com/nikhil-vibing) - Creator & Lead Developer
