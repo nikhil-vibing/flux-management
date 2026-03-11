@@ -1,0 +1,15 @@
+{
+  "/(portal)/ai-assistant/page": "/ai-assistant",
+  "/(portal)/connectors/page": "/connectors",
+  "/(portal)/dashboard/page": "/dashboard",
+  "/(portal)/documents/page": "/documents",
+  "/(portal)/help/page": "/help",
+  "/(portal)/helpdesk/page": "/helpdesk",
+  "/(portal)/projects/[id]/page": "/projects/[id]",
+  "/(portal)/projects/page": "/projects",
+  "/(portal)/settings/page": "/settings",
+  "/(portal)/tech-stack/page": "/tech-stack",
+  "/_global-error/page": "/_global-error",
+  "/_not-found/page": "/_not-found",
+  "/login/page": "/login"
+}
