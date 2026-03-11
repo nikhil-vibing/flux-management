@@ -27,7 +27,6 @@ Thumbs.db
 .idea/
 
 # Claude / AI agent config
-CLAUDE.md
 
 # Brand & internal docs (not for repo)
 *.pdf
